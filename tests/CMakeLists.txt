@@ -10,8 +10,7 @@ target_include_directories(unit_triangles PUBLIC ${INCLUDE_DIR})
 target_link_libraries(unit_triangles gtest gtest_main)
 
 set(RUN_TESTS ./unit_triangles --gtest_color=yes)
-add_custom_target(
-    unit_triangles_target ALL
+add_test(
+    NAME unit_triangles_target
     COMMAND ${RUN_TESTS}
-    DEPENDS unit_triangles
 )

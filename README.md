@@ -21,7 +21,7 @@
 ## How to test
 
 Unit tests:<br>
-in root dir write <code>./build/tests/unit_triangles</code> in terminal
+in root dir write <code>ctest --test-dir build</code> in terminal
 
 <p align="center"><img src="https://github.com/baitim/Triangles3D/blob/main/images/cat.gif" width="40%"></p>
 
