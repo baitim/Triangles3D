@@ -9,32 +9,24 @@ namespace point {
         double x_, y_, z_;
 
     public:
-        point_t()                             : x_(0), y_(0), z_(0) {}
+        point_t() : x_(), y_(), z_() {}
         point_t(double x, double y, double z) : x_(x), y_(y), z_(z) {}
 
-        double& operator[](int n) {
-            if (n == 0)
-                return x_;
-            if (n == 1)
-                return y_;
-            return z_;
-        }
+        double& set_x() { return x_; }
+        double& set_y() { return y_; }
+        double& set_z() { return z_; }
 
-        double operator[](int n) const {
-            if (n == 0)
-                return x_;
-            if (n == 1)
-                return y_;
-            return z_;
-        }
+        double x() const { return x_; }
+        double y() const { return y_; }
+        double z() const { return z_; }
     };
 
     point_t operator+(const point_t& a, const point_t& b) {
-        return point_t(a[0] + b[0], a[1] + b[1], a[2] + b[2]);
+        return point_t(a.x() + b.x(), a.y() + b.y(), a.z() + b.z());
     }
 
     point_t operator-(const point_t& a, const point_t& b) {
-        return point_t(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+        return point_t(a.x() - b.x(), a.y() - b.y(), a.z() - b.z());
     }
 
     const point_t& operator+=(point_t& a, const point_t& b) {
@@ -46,18 +38,18 @@ namespace point {
     }
 
     bool operator==(const point_t& a, const point_t& b) {
-        return (doubles::is_double_equal(a[0], b[0]) &&
-                doubles::is_double_equal(a[1], b[1]) &&
-                doubles::is_double_equal(a[2], b[2]));
+        return (doubles::is_double_equal(a.x(), b.x()) &&
+                doubles::is_double_equal(a.y(), b.y()) &&
+                doubles::is_double_equal(a.z(), b.z()));
     }
 
     std::istream& operator>>(std::istream& is, point_t& p) {
-        is >> p[0] >> p[1] >> p[2];
+        is >> p.set_x() >> p.set_y() >> p.set_z();
         return is;
     }
 
     std::ostream& operator<<(std::ostream& os, const point_t& p) {
-        os << print_lcyan("\nPoint:\t(" << p[0] << ", " << p[1] << ", " << p[2] << ")\n");
+        os << print_lcyan("Point(" << p.x() << "," << p.y() << "," << p.z() << ")");
         return os;
     }
 }
