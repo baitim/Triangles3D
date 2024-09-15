@@ -36,7 +36,17 @@ namespace plane {
         plane_t norm() const {
             plane_t a_norm{*this};
 
-            double factor = 1 / A_;
+            double factor = 1;
+            if (!doubles::is_double_equal(A_, 0)) {
+                factor /= A_;
+            } else if (!doubles::is_double_equal(B_, 0)) {
+                factor /= B_;
+            } else if (!doubles::is_double_equal(C_, 0)) {
+                factor /= C_;
+            } else if (!doubles::is_double_equal(D_, 0)) {
+                factor /= D_;
+            }
+
             a_norm.set_A() *= factor;
             a_norm.set_B() *= factor;
             a_norm.set_C() *= factor;
@@ -56,13 +66,20 @@ namespace plane {
         double D() const { return D_; }
     };
 
-    bool operator==(const plane_t& a, const plane_t& b) {
+    bool is_planes_parallel(const plane_t& a, const plane_t& b) {
         plane_t a_norm = a.norm();
         plane_t b_norm = b.norm();
 
         return (doubles::is_double_equal(a_norm.A(), b_norm.A()) &&
                 doubles::is_double_equal(a_norm.B(), b_norm.B()) &&
-                doubles::is_double_equal(a_norm.C(), b_norm.C()) &&
+                doubles::is_double_equal(a_norm.C(), b_norm.C()));
+    }
+
+    bool operator==(const plane_t& a, const plane_t& b) {
+        plane_t a_norm = a.norm();
+        plane_t b_norm = b.norm();
+
+        return (is_planes_parallel(a, b) &&
                 doubles::is_double_equal(a_norm.D(), b_norm.D()));
     }
 

@@ -41,6 +41,21 @@ TEST(Plane_main, test_plane_opers)
     ASSERT_EQ(pl1.norm(), pl2.norm());
 }
 
+TEST(Plane_main, test_plane_parallel)
+{
+    point::point_t p1( 7, 1, 1);
+    point::point_t p2( 2, 3, 1);
+    point::point_t p3(-3, 4, 1);
+    plane::plane_t pl1(p1, p2, p3);
+
+    point::point_t p4(1,  4, 2);
+    point::point_t p5(7, -2, 2);
+    point::point_t p6(6, -3, 2);
+    plane::plane_t pl2(p4, p5, p6);
+
+    ASSERT_EQ(plane::is_planes_parallel(pl1, pl2), true);
+}
+
 TEST(Triangle_main, test_triangle_opers)
 {
     point::point_t p1(1, 0, 0);
