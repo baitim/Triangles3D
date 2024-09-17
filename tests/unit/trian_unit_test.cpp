@@ -15,6 +15,29 @@ TEST(Point_main, test_point_opers)
     p2 -= p3;
 
     ASSERT_EQ(p1, p2);
+    ASSERT_EQ(p1 * p2, point::point_t(4, 25, 64));
+    ASSERT_EQ(p1 / p2, point::point_t(1, 1, 1));
+}
+
+TEST(Point_main, test_point_cross_product)
+{
+    point::point_t p1(-8, 7, 13);
+    point::point_t p2(41, 3, 37);
+
+    point::point_t p3 = point::cross_product(p1, p2);
+    point::point_t ans{220, 829, -311};
+
+    ASSERT_EQ(p3, ans);
+}
+
+TEST(Point_main, test_point_length)
+{
+    point::point_t p1(3, 4, 5);
+    point::point_t p2(5, 5, 0);
+    point::point_t p3(3, 4, 4);
+
+    ASSERT_EQ(doubles::is_double_equal(p1.length(), p2.length()), true);
+    ASSERT_EQ(doubles::is_double_equal(p1.length(), p3.length()), false);
 }
 
 TEST(Segment_main, test_segment_opers)
@@ -78,4 +101,55 @@ TEST(Triangle_main, test_triangle_opers)
     triangle::triangle_t t3(p4, p5, p6);
 
     ASSERT_EQ(t1.get_plane(), t3.get_plane());
+}
+
+TEST(Triangle_main, test_triangle_square)
+{
+    point::point_t p1(1, 2, 3);
+    point::point_t p2(4, 5, 6);
+    point::point_t p3(7, 8, 9);
+    point::point_t p4(10, 11, 12);
+    point::point_t p5(10, 11, 13);
+
+    triangle::triangle_t t1(p1, p2, p3);
+    triangle::triangle_t t2(p1, p2, p4);
+    triangle::triangle_t t3(p2, p3, p4);
+
+    ASSERT_EQ(doubles::is_double_equal(t1.square(), t2.square()), true);
+    ASSERT_EQ(doubles::is_double_equal(t1.square(), t3.square()), true);
+
+    triangle::triangle_t t4(p1, p2, p5);
+    triangle::triangle_t t5(p2, p3, p5);
+
+    ASSERT_EQ(doubles::is_double_equal(t4.square(), t5.square()), true);
+    ASSERT_EQ(doubles::is_double_equal(t1.square(), t4.square()), false);
+    ASSERT_EQ(doubles::is_double_equal(t2.square(), t5.square()), false);
+}
+
+TEST(Triangle_main, test_point_in_triangle)
+{
+    point::point_t p1(-3,  4,  6);
+    point::point_t p2( 7,  8, -3);
+    point::point_t p3( 2, -5,  1);
+
+    triangle::triangle_t t1(p1, p2, p3);
+    plane::plane_t triang_plane{-101, 5, -110, 337};
+
+    ASSERT_EQ(t1.get_plane(), triang_plane);
+    ASSERT_EQ(t1.is_point_in(p1), true);
+    ASSERT_EQ(t1.is_point_in(p2), true);
+    ASSERT_EQ(t1.is_point_in(p3), true);
+
+    ASSERT_EQ(t1.is_point_in((p1 + p2) / 2), true);
+    ASSERT_EQ(t1.is_point_in((p1 + p2 + p3) / 3), true);
+
+    point::point_t tp1(1, 2, 3);
+    point::point_t tp2(1, 16, 2);
+    point::point_t tp3(3, -2.4, 0.2);
+    point::point_t tp4(2, -5, 1);
+
+    ASSERT_EQ(t1.is_point_in(tp1), false);
+    ASSERT_EQ(t1.is_point_in(tp2), false);
+    ASSERT_EQ(t1.is_point_in(tp3), true);
+    ASSERT_EQ(t1.is_point_in(tp4), true);
 }

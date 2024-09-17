@@ -10,6 +10,7 @@ namespace point {
 
     public:
         point_t() : x_(), y_(), z_() {}
+        point_t(double val) : x_(val), y_(val), z_(val) {}
         point_t(double x, double y, double z) : x_(x), y_(y), z_(z) {}
 
         double& set_x() { return x_; }
@@ -19,7 +20,19 @@ namespace point {
         double get_x() const { return x_; }
         double get_y() const { return y_; }
         double get_z() const { return z_; }
+
+        double length() const {
+            return sqrt(x_ * x_ + y_ * y_ + z_ * z_);
+        }
     };
+
+    point_t cross_product(const point_t& a, const point_t& b) {
+        double new_a = a.get_y() * b.get_z() - a.get_z() * b.get_y();
+        double new_b = a.get_z() * b.get_x() - a.get_x() * b.get_z();
+        double new_c = a.get_x() * b.get_y() - a.get_y() * b.get_x();
+
+        return point_t{new_a, new_b, new_c};
+    }
 
     point_t operator+(const point_t& a, const point_t& b) {
         return point_t(a.get_x() + b.get_x(), a.get_y() + b.get_y(), a.get_z() + b.get_z());
@@ -27,6 +40,14 @@ namespace point {
 
     point_t operator-(const point_t& a, const point_t& b) {
         return point_t(a.get_x() - b.get_x(), a.get_y() - b.get_y(), a.get_z() - b.get_z());
+    }
+
+    point_t operator*(const point_t& a, const point_t& b) {
+        return point_t(a.get_x() * b.get_x(), a.get_y() * b.get_y(), a.get_z() * b.get_z());
+    }
+
+    point_t operator/(const point_t& a, const point_t& b) {
+        return point_t(a.get_x() / b.get_x(), a.get_y() / b.get_y(), a.get_z() / b.get_z());
     }
 
     const point_t& operator+=(point_t& a, const point_t& b) {
