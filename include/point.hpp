@@ -16,17 +16,17 @@ namespace point {
         double& set_y() { return y_; }
         double& set_z() { return z_; }
 
-        double x() const { return x_; }
-        double y() const { return y_; }
-        double z() const { return z_; }
+        double get_x() const { return x_; }
+        double get_y() const { return y_; }
+        double get_z() const { return z_; }
     };
 
     point_t operator+(const point_t& a, const point_t& b) {
-        return point_t(a.x() + b.x(), a.y() + b.y(), a.z() + b.z());
+        return point_t(a.get_x() + b.get_x(), a.get_y() + b.get_y(), a.get_z() + b.get_z());
     }
 
     point_t operator-(const point_t& a, const point_t& b) {
-        return point_t(a.x() - b.x(), a.y() - b.y(), a.z() - b.z());
+        return point_t(a.get_x() - b.get_x(), a.get_y() - b.get_y(), a.get_z() - b.get_z());
     }
 
     const point_t& operator+=(point_t& a, const point_t& b) {
@@ -37,10 +37,16 @@ namespace point {
         return a = a - b;
     }
 
+    bool operator<(const point_t& a, const point_t& b) {
+        return (doubles::is_double_equal(a.get_x(), b.get_x()) &&
+                doubles::is_double_equal(a.get_y(), b.get_y()) &&
+                doubles::is_double_equal(a.get_z(), b.get_z()));
+    }
+
     bool operator==(const point_t& a, const point_t& b) {
-        return (doubles::is_double_equal(a.x(), b.x()) &&
-                doubles::is_double_equal(a.y(), b.y()) &&
-                doubles::is_double_equal(a.z(), b.z()));
+        return (doubles::is_double_equal(a.get_x(), b.get_x()) &&
+                doubles::is_double_equal(a.get_y(), b.get_y()) &&
+                doubles::is_double_equal(a.get_z(), b.get_z()));
     }
 
     std::istream& operator>>(std::istream& is, point_t& p) {
@@ -49,7 +55,7 @@ namespace point {
     }
 
     std::ostream& operator<<(std::ostream& os, const point_t& p) {
-        os << print_lcyan("Point(" << p.x() << "," << p.y() << "," << p.z() << ")");
+        os << print_lcyan("Point(" << p.get_x() << "," << p.get_y() << "," << p.get_z() << ")");
         return os;
     }
 }

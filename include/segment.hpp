@@ -23,15 +23,15 @@ namespace segment {
         point_t& set_first()  { return x_; }
         point_t& set_second() { return y_; }
 
-        point_t first()  const { return x_; }
-        point_t second() const { return y_; }
-        point_t vector() const { return v_; }
+        point_t get_first()  const { return x_; }
+        point_t get_second() const { return y_; }
+        point_t get_vector() const { return v_; }
     };
 
     bool operator==(const segment_t& a, const segment_t& b) {
-        return (a.first()  == b.first()  &&
-                a.second() == b.second() &&
-                a.vector() == b.vector());
+        return (a.get_first()  == b.get_first()  &&
+                a.get_second() == b.get_second() &&
+                a.get_vector() == b.get_vector());
     }
 
     std::istream& operator>>(std::istream& is, segment_t& s) {
@@ -41,8 +41,8 @@ namespace segment {
     }
 
     std::ostream& operator<<(std::ostream& os, const segment_t& s) {
-        os << print_lmagenta("Segment(") << s.first() << print_lmagenta(",") << s.second() <<
-              print_lmagenta(",") << s.vector() << print_lmagenta(")");
+        os << print_lmagenta("Segment(") << s.get_first() << print_lmagenta(",") << s.get_second() <<
+              print_lmagenta(",") << s.get_vector() << print_lmagenta(")");
         return os;
     }
 }

@@ -25,7 +25,7 @@ TEST(Segment_main, test_segment_opers)
 
     point::point_t p3(-4, 4, 8);
 
-    ASSERT_EQ(s1.vector(), p3);
+    ASSERT_EQ(s1.get_vector(), p3);
 }
 
 TEST(Plane_main, test_plane_opers)
@@ -66,16 +66,16 @@ TEST(Triangle_main, test_triangle_opers)
     segment::segment_t s2(p2, p3);
     segment::segment_t s3(p3, p1);
 
-    triangle::triangle_t pl1(s1, s2, s3);
-    triangle::triangle_t pl2(p1, p2, p3);
+    triangle::triangle_t t1(s1, s2, s3);
+    triangle::triangle_t t2(p1, p2, p3);
 
-    ASSERT_EQ(pl1, pl2);
-    ASSERT_EQ(pl1.plane(), pl2.plane());
+    ASSERT_EQ(t1, t2);
+    ASSERT_EQ(t1.get_plane(), t2.get_plane());
 
     point::point_t p4(1,  4, -6);
     point::point_t p5(1, -2,  10);
     point::point_t p6(1, -3,  5);
-    triangle::triangle_t pl3(p4, p5, p6);
+    triangle::triangle_t t3(p4, p5, p6);
 
-    ASSERT_EQ(pl1.plane(), pl3.plane());
+    ASSERT_EQ(t1.get_plane(), t3.get_plane());
 }
