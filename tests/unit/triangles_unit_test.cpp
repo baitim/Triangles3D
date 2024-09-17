@@ -36,8 +36,18 @@ TEST(Point_main, test_point_length)
     point::point_t p2(5, 5, 0);
     point::point_t p3(3, 4, 4);
 
-    ASSERT_EQ(doubles::is_double_equal(p1.length(), p2.length()), true);
+    ASSERT_NEAR(p1.length(), p2.length(), doubles::EPSILON);
     ASSERT_EQ(doubles::is_double_equal(p1.length(), p3.length()), false);
+}
+
+TEST(Line_main, test_line_opers)
+{
+    line::line_t l1(4, 3, 4, 6);
+    line::line_t l2(4, 3, 4, 6);
+    line::line_t l3(3, 3, 4, 6);
+
+    ASSERT_EQ(l1, l2);
+    ASSERT_NE(l1, l3);
 }
 
 TEST(Segment_main, test_segment_opers)
@@ -115,13 +125,13 @@ TEST(Triangle_main, test_triangle_square)
     triangle::triangle_t t2(p1, p2, p4);
     triangle::triangle_t t3(p2, p3, p4);
 
-    ASSERT_EQ(doubles::is_double_equal(t1.square(), t2.square()), true);
-    ASSERT_EQ(doubles::is_double_equal(t1.square(), t3.square()), true);
+    ASSERT_NEAR(t1.square(), t2.square(), doubles::EPSILON);
+    ASSERT_NEAR(t1.square(), t3.square(), doubles::EPSILON);
 
     triangle::triangle_t t4(p1, p2, p5);
     triangle::triangle_t t5(p2, p3, p5);
 
-    ASSERT_EQ(doubles::is_double_equal(t4.square(), t5.square()), true);
+    ASSERT_NEAR(t4.square(), t5.square(), doubles::EPSILON);
     ASSERT_EQ(doubles::is_double_equal(t1.square(), t4.square()), false);
     ASSERT_EQ(doubles::is_double_equal(t2.square(), t5.square()), false);
 }

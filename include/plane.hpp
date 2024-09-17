@@ -1,5 +1,6 @@
 #pragma once
 
+#include "line.hpp"
 #include "segment.hpp"
 
 namespace plane {
