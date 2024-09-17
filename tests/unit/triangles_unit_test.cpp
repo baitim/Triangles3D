@@ -89,6 +89,38 @@ TEST(Plane_main, test_plane_parallel)
     ASSERT_EQ(plane::is_planes_parallel(pl1, pl2), true);
 }
 
+TEST(Plane_main, test_plane_intersection_exist)
+{
+    point::point_t p1( 3, -9,  5);
+    point::point_t p2( 13, 11, 7);
+    point::point_t p3(-3, -4,  23);
+    plane::plane_t pl1(p1, p2, p3);
+
+    point::point_t p4(-10,  5, 13);
+    point::point_t p5( 17, -2, 11);
+    point::point_t p6( 6,  -7, 9);
+    plane::plane_t pl2(p4, p5, p6);
+
+    line::line_t ans(27784, 74880, 27368, -3628);
+
+    ASSERT_EQ(plane::get_planes_intersection(pl1, pl2), ans);
+}
+
+TEST(Plane_main, test_plane_intersection_not_exist)
+{
+    point::point_t p1(0, 0, 1);
+    point::point_t p2(1, 0, 1);
+    point::point_t p3(1, 1, 1);
+    plane::plane_t pl1(p1, p2, p3);
+
+    point::point_t p4(1, 1, 2);
+    point::point_t p5(2, 3, 2);
+    point::point_t p6(4, 4, 2);
+    plane::plane_t pl2(p4, p5, p6);
+
+    ASSERT_EQ(plane::get_planes_intersection(pl1, pl2).is_valid(), false);
+}
+
 TEST(Triangle_main, test_triangle_opers)
 {
     point::point_t p1(1, 0, 0);

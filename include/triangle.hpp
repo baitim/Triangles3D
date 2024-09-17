@@ -51,6 +51,13 @@ namespace triangle {
 
             return false;
         }
+
+        bool is_valid() const {
+            return (a_.is_valid() &&
+                    b_.is_valid() &&
+                    c_.is_valid() &&
+                    triag_plane.is_valid());
+        }
     };
 
     double triangle_square(const point_t& a, const point_t& b, const point_t& c) {

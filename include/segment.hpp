@@ -26,6 +26,12 @@ namespace segment {
         point_t get_first()  const { return x_; }
         point_t get_second() const { return y_; }
         point_t get_vector() const { return v_; }
+
+        bool is_valid() const {
+            return (x_.is_valid() &&
+                    y_.is_valid() &&
+                    v_.is_valid());
+        }
     };
 
     bool operator==(const segment_t& a, const segment_t& b) {

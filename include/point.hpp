@@ -9,7 +9,7 @@ namespace point {
         double x_, y_, z_;
 
     public:
-        point_t() : x_(), y_(), z_() {}
+        point_t() : x_(NAN), y_(NAN), z_(NAN) {}
         point_t(double val) : x_(val), y_(val), z_(val) {}
         point_t(double x, double y, double z) : x_(x), y_(y), z_(z) {}
 
@@ -23,6 +23,12 @@ namespace point {
 
         double length() const {
             return sqrt(x_ * x_ + y_ * y_ + z_ * z_);
+        }
+
+        bool is_valid() const {
+            return (!std::isnan(x_) &&
+                    !std::isnan(y_) &&
+                    !std::isnan(z_));
         }
     };
 

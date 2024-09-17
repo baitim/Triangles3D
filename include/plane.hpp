@@ -4,13 +4,14 @@
 #include "segment.hpp"
 
 namespace plane {
-    using namespace segment; 
+    using namespace line;
+    using namespace segment;
 
     class plane_t {
         double A_, B_, C_, D_;
 
     public:
-        plane_t() : A_(0), B_(0), C_(0), D_(0) {}
+        plane_t() : A_(NAN), B_(NAN), C_(NAN), D_(NAN) {}
         plane_t(double A, double B, double C, double D) : A_(A), B_(B), C_(C), D_(D) {}
 
         plane_t(point_t a, point_t b, point_t c) {
@@ -35,7 +36,7 @@ namespace plane {
         }
 
         plane_t norm() const {
-            plane_t a_norm{*this};
+            plane_t norm{*this};
 
             double factor = 1;
             if (!doubles::is_double_equal(A_, 0)) {
@@ -48,12 +49,12 @@ namespace plane {
                 factor /= D_;
             }
 
-            a_norm.set_A() *= factor;
-            a_norm.set_B() *= factor;
-            a_norm.set_C() *= factor;
-            a_norm.set_D() *= factor;
+            norm.set_A() *= factor;
+            norm.set_B() *= factor;
+            norm.set_C() *= factor;
+            norm.set_D() *= factor;
 
-            return a_norm;
+            return norm;
         }
 
         double& set_A() { return A_; }
@@ -69,6 +70,13 @@ namespace plane {
         point_t normal() const {
             return point_t(A_, B_, C_);
         }
+
+        bool is_valid() const {
+            return (!std::isnan(A_) &&
+                    !std::isnan(B_) &&
+                    !std::isnan(C_) &&
+                    !std::isnan(D_));
+        }
     };
 
     bool is_planes_parallel(const plane_t& a, const plane_t& b) {
@@ -78,6 +86,23 @@ namespace plane {
         return (doubles::is_double_equal(a_norm.get_A(), b_norm.get_A()) &&
                 doubles::is_double_equal(a_norm.get_B(), b_norm.get_B()) &&
                 doubles::is_double_equal(a_norm.get_C(), b_norm.get_C()));
+    }
+
+    line_t get_planes_intersection(const plane_t& a, const plane_t& b) {
+        if (is_planes_parallel(a, b)) {
+            return line_t();
+        }
+
+        point_t N1 = a.normal();
+        point_t N2 = b.normal();
+
+        point_t line_v = cross_product(N1, N2);
+
+        double line_D = a.get_D() - a.get_A() * line_v.get_x()
+                                  - a.get_B() * line_v.get_y()
+                                  - a.get_C() * line_v.get_z();
+
+        return line_t(line_v.get_x(), line_v.get_y(), line_v.get_z(), line_D);
     }
 
     bool operator==(const plane_t& a, const plane_t& b) {
