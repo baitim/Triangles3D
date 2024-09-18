@@ -244,14 +244,6 @@ namespace triangle {
         coefs_t* coefs_a = a.get_line_intersect_edges(line_inter);
         coefs_t* coefs_b = b.get_line_intersect_edges(line_inter);
 
-        for (int i = 0; i < 3; i++) {
-            std::cerr << coefs_a[i].is_valid_ << " " << coefs_a[i].k1_ << " " << coefs_a[i].k2_ << "\n";
-        }
-
-        for (int i = 0; i < 3; i++) {
-            std::cerr << coefs_b[i].is_valid_ << " " << coefs_b[i].k1_ << " " << coefs_b[i].k2_ << "\n";
-        }
-
         bool is_coefs_intersection = is_segments_coefs_intersect(coefs_a, coefs_b);
         delete [] coefs_a;
         delete [] coefs_b;
