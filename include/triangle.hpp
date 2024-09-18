@@ -1,5 +1,6 @@
 #pragma once
 
+#include <set>
 #include "plane.hpp"
 
 namespace triangle {
@@ -25,11 +26,11 @@ namespace triangle {
         point_t& set_a() { return a_; }
         point_t& set_b() { return b_; }
         point_t& set_c() { return c_; }
+        plane_t& set_plane() { return triag_plane; }
 
         point_t get_a() const { return a_; }
         point_t get_b() const { return b_; }
         point_t get_c() const { return c_; }
-
         plane_t get_plane() const { return triag_plane; }
 
         double square() const { 
@@ -178,6 +179,19 @@ namespace triangle {
         return false;
     }
 
+    std::set<int> get_set_triangles_in_intersections(int count, const triangle_t* b) {
+        std::set<int> ans{};
+        for (int i = 0; i < count; ++i) {
+            for (int j = i + 1; j < count; ++j) {
+                if (is_triangles_intersect(b[i], b[j])) {
+                    ans.insert(i);
+                    ans.insert(j);
+                }
+            }
+        }
+        return ans;
+    }
+
     double triangle_square(const point_t& a, const point_t& b, const point_t& c) {
         return cross_product(b - a, c - a).length() / 2;
     }
@@ -189,7 +203,9 @@ namespace triangle {
     }
 
     std::istream& operator>>(std::istream& is, triangle_t& t) {
-        is >> t.set_a() >> t.set_b() >> t.set_c();
+        point_t a, b, c;
+        is >> a >> b >> c;
+        t = (triangle_t){a, b, c};
         return is;
     }
 

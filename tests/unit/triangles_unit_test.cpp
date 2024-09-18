@@ -541,3 +541,26 @@ TEST(Triangle_main, test_triangles_intersect8)
 
     ASSERT_EQ(triangle::is_triangles_intersect(t1, t4), true);
 }
+
+TEST(Triangle_main, test_triangles_intersect9)
+{
+    point::point_t p1(1, 1, 0);
+    point::point_t p2(3, 1, 0);
+    point::point_t p3(1, 1, 2);
+    triangle::triangle_t t1(p1, p2, p3);
+
+    point::point_t p4(2, 2, 2);
+    point::point_t p5(1, 1, 2);
+    point::point_t p6(2, 1, 2);
+    triangle::triangle_t t2(p4, p5, p6);
+
+    std::cerr << t1 << "\n";
+    std::cerr << t2 << "\n";
+
+    std::cerr << t1.get_plane() << "\n";
+    std::cerr << t2.get_plane() << "\n";
+
+    std::cerr << triangle::get_planes_intersection(t1.get_plane(), t2.get_plane()) << "\n";
+
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t2), true);
+}

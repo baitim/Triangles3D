@@ -91,7 +91,10 @@ namespace plane {
         y = (a.get_C() * b.get_D() - b.get_C() * a.get_D()) /
             (a.get_B() * b.get_C() - a.get_C() * b.get_B());
 
-        z = -(a.get_D() + a.get_B() * y) / a.get_C();
+        if (!is_double_equal(a.get_C(), 0))
+            z = -(a.get_D() + a.get_B() * y) / a.get_C();
+        else if (!is_double_equal(b.get_C(), 0))
+            z = -(b.get_D() + b.get_B() * y) / b.get_C();
 
         point_t line_point(x, y, z);
         return line_t(line_point, line_v);
