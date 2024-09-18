@@ -58,12 +58,15 @@ namespace triangle {
                     c_.is_valid() &&
                     triag_plane.is_valid());
         }
+
+        bool is_line_intersect(const line_t& line) const {
+            if (!line.is_valid() || !is_valid())
+                return false;
+        }
     };
 
     double triangle_square(const point_t& a, const point_t& b, const point_t& c) {
-        segment_t ba{b, a};
-        segment_t ca{c, a};
-        return cross_product(ba.get_vector(), ca.get_vector()).length() / 2;
+        return cross_product(b - a, c - a).length() / 2;
     }
 
     bool operator==(const triangle_t& a, const triangle_t& b) {

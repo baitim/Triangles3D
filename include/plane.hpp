@@ -1,10 +1,8 @@
 #pragma once
 
-#include "line.hpp"
 #include "segment.hpp"
 
 namespace plane {
-    using namespace line;
     using namespace segment;
 
     class plane_t {
@@ -80,29 +78,29 @@ namespace plane {
     };
 
     bool is_planes_parallel(const plane_t& a, const plane_t& b) {
-        plane_t a_norm = a.norm();
-        plane_t b_norm = b.norm();
-
-        return (doubles::is_double_equal(a_norm.get_A(), b_norm.get_A()) &&
-                doubles::is_double_equal(a_norm.get_B(), b_norm.get_B()) &&
-                doubles::is_double_equal(a_norm.get_C(), b_norm.get_C()));
+        return (a.norm().normal() == b.norm().normal());
     }
 
     line_t get_planes_intersection(const plane_t& a, const plane_t& b) {
-        if (is_planes_parallel(a, b)) {
+        if (!a.is_valid() || !b.is_valid() || is_planes_parallel(a, b))
             return line_t();
-        }
 
         point_t N1 = a.normal();
         point_t N2 = b.normal();
 
         point_t line_v = cross_product(N1, N2);
+        point_t line_point = line_v;
 
         double line_D = a.get_D() - a.get_A() * line_v.get_x()
                                   - a.get_B() * line_v.get_y()
                                   - a.get_C() * line_v.get_z();
 
-        return line_t(line_v.get_x(), line_v.get_y(), line_v.get_z(), line_D);
+        double coef = line_D / (line_v.get_x() + line_v.get_y() + line_v.get_z());                
+        line_point.set_x() -= coef * line_v.get_x();
+        line_point.set_y() -= coef * line_v.get_y();
+        line_point.set_z() -= coef * line_v.get_z();
+
+        return line_t(line_point, line_v);
     }
 
     bool operator==(const plane_t& a, const plane_t& b) {
@@ -119,8 +117,8 @@ namespace plane {
     }
 
     std::ostream& operator<<(std::ostream& os, const plane_t& pl) {
-        os << print_lgreen("Plane(" << pl.get_A() << "," << pl.get_B() << "," <<
-                           pl.get_C() << "," << pl.get_D() << ")");
+        os << print_lgreen("Plane(") << pl.get_A() << print_lgreen(",") << pl.get_B() <<
+              print_lgreen(",") << pl.get_C() << print_lgreen(",") << pl.get_D() << print_lgreen(")");
         return os;
     }
 }

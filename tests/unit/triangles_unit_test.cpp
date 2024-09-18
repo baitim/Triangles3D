@@ -42,23 +42,54 @@ TEST(Point_main, test_point_length)
 
 TEST(Line_main, test_line_opers)
 {
-    line::line_t l1(4, 3, 4, 6);
-    line::line_t l2(4, 3, 4, 6);
-    line::line_t l3(3, 3, 4, 6);
+    point::point_t p1(3, 4, 5);
+    point::point_t p2(6, 3, 2);
 
-    ASSERT_EQ(l1, l2);
-    ASSERT_NE(l1, l3);
+    line::line_t l1(p1, p2);
+
+    point::point_t p3(1, 2, 7);
+    point::point_t p4(6, 3, 2);
+
+    line::line_t l2(p3, p4);
+
+    ASSERT_EQ(l1.get_v(), l2.get_v());
+    ASSERT_NE(l1.get_x(), l2.get_x());
+
+    point::point_t p5(3, 4, 5);
+    line::line_t l3(p5, p2);
+
+    ASSERT_EQ(l1, l3);
 }
 
-TEST(Segment_main, test_segment_opers)
+TEST(Segment_main, test_segment_line_intersection)
 {
-    point::point_t p1(4, 3, 4);
-    point::point_t p2(0, 7, 12);
+    point::point_t p1(1, 1, 1);
+    point::point_t p2(3, 5, 7);
     segment::segment_t s1(p1, p2);
 
-    point::point_t p3(-4, 4, 8);
+    line::line_t l1(p1, p2 - p1);
 
-    ASSERT_EQ(s1.get_vector(), p3);
+    ASSERT_EQ(s1.is_line_intersect(l1), true);
+
+    point::point_t p3(p2 + 1);
+    line::line_t l2(p1 - 1, p3);
+
+    ASSERT_EQ(s1.is_line_intersect(l2), true);
+
+    point::point_t p4((p1 + p2) / 2);
+    line::line_t l3(p3, p4 - p3);
+
+    ASSERT_EQ(s1.is_line_intersect(l3), true);
+
+    point::point_t p5(0, 0, 0);
+    point::point_t p6(1, 0, 1);
+    line::line_t l4(p5, p6);
+    ASSERT_EQ(s1.is_line_intersect(l4), false);
+
+    point::point_t p7(0, 0, 0);
+    point::point_t p8(1, 1, 1);
+    line::line_t l5(p7, p8);
+    ASSERT_EQ(s1.is_line_intersect(l5), true);
 }
 
 TEST(Plane_main, test_plane_opers)
@@ -101,9 +132,9 @@ TEST(Plane_main, test_plane_intersection_exist)
     point::point_t p6( 6,  -7, 9);
     plane::plane_t pl2(p4, p5, p6);
 
-    line::line_t ans(27784, 74880, 27368, -3628);
+    point::point_t ans(27784, 74880, 27368);
 
-    ASSERT_EQ(plane::get_planes_intersection(pl1, pl2), ans);
+    ASSERT_EQ(plane::get_planes_intersection(pl1, pl2).get_v(), ans);
 }
 
 TEST(Plane_main, test_plane_intersection_not_exist)

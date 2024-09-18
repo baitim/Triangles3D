@@ -25,6 +25,17 @@ namespace point {
             return sqrt(x_ * x_ + y_ * y_ + z_ * z_);
         }
 
+        point_t norm() const {
+            point_t norm{*this};
+            double length = norm.length();
+
+            norm.x_ = x_ / length;
+            norm.y_ = y_ / length;
+            norm.z_ = z_ / length;
+
+            return norm;
+        }
+
         bool is_valid() const {
             return (!std::isnan(x_) &&
                     !std::isnan(y_) &&
@@ -38,6 +49,10 @@ namespace point {
         double new_c = a.get_x() * b.get_y() - a.get_y() * b.get_x();
 
         return point_t{new_a, new_b, new_c};
+    }
+
+    point_t operator-(const point_t& a) {
+        return point_t(-a.get_x(), -a.get_y(), -a.get_z());
     }
 
     point_t operator+(const point_t& a, const point_t& b) {

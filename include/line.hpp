@@ -2,71 +2,56 @@
 
 #include <iostream>
 #include "ANSI_colors.hpp"
-#include "doubles.hpp"
+#include "point.hpp"
 
 namespace line {
+    using namespace point;
+
     class line_t {
-        double A_, B_, C_, D_;
+        point_t x_;
+        point_t v_;
 
     public:
-        line_t() : A_(NAN), B_(NAN), C_(NAN), D_(NAN) {}
-        line_t(double A, double B, double C, double D) : A_(A), B_(B), C_(C), D_(D) {}
+        line_t() : x_(), v_() {}
+        line_t(point_t x, point_t v) : x_(x), v_(v) {}
 
-        double& set_A() { return A_; }
-        double& set_B() { return B_; }
-        double& set_C() { return C_; }
-        double& set_D() { return D_; }
+        point_t& set_x() { return x_; }
+        point_t& set_v() { return v_; }
 
-        double get_A() const { return A_; }
-        double get_B() const { return B_; }
-        double get_C() const { return C_; }
-        double get_D() const { return D_; }
+        point_t get_x() const { return x_; }
+        point_t get_v() const { return v_; }
 
         line_t norm() const {
             line_t norm{*this};
-
-            double factor = 1;
-            if (!doubles::is_double_equal(A_, 0)) {
-                factor /= A_;
-            } else if (!doubles::is_double_equal(B_, 0)) {
-                factor /= B_;
-            } else if (!doubles::is_double_equal(C_, 0)) {
-                factor /= C_;
-            } else if (!doubles::is_double_equal(D_, 0)) {
-                factor /= D_;
-            }
-
-            norm.set_A() *= factor;
-            norm.set_B() *= factor;
-            norm.set_C() *= factor;
-            norm.set_D() *= factor;
-
+            norm.set_v().norm();
             return norm;
         }
 
         bool is_valid() const {
-            return (!std::isnan(A_) &&
-                    !std::isnan(B_) &&
-                    !std::isnan(C_) &&
-                    !std::isnan(D_));
+            return (x_.is_valid() && v_.is_valid());
         }
     };
 
+    bool is_lines_parallel(const line_t& a, const line_t& b) {
+        return (a.get_v().norm() == b.get_v().norm());
+    }
+
     bool operator==(const line_t& a, const line_t& b) {
-        return (doubles::is_double_equal(a.get_A(), b.get_A()) &&
-                doubles::is_double_equal(a.get_B(), b.get_B()) &&
-                doubles::is_double_equal(a.get_C(), b.get_C()) &&
-                doubles::is_double_equal(a.get_D(), b.get_D()));
+        if ((b.get_x() == a.get_x()) && (b.get_v() == a.get_v()))
+            return true;
+
+        line_t dx(a.get_x(), b.get_x() - a.get_x());
+        return (is_lines_parallel(a, b) &&
+                is_lines_parallel(a, dx));
     }
 
     std::istream& operator>>(std::istream& is, line_t& l) {
-        is >> l.set_A() >> l.set_B() >> l.set_C() >> l.set_D();
+        is >> l.set_x() >> l.set_v();
         return is;
     }
 
     std::ostream& operator<<(std::ostream& os, const line_t& l) {
-        os << print_lblue("Line(" << l.get_A() << "," << l.get_B() << "," << l.get_C() <<
-                          "," << l.get_D() << ")");
+        os << print_lblue("Line(") << l.get_x() << print_lblue(",") << l.get_v() << print_lblue(")");
         return os;
     }
 }
