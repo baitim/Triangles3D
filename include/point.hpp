@@ -53,6 +53,15 @@ namespace point {
         return point_t{new_a, new_b, new_c};
     }
 
+
+    double triple_product(const point_t& a, const point_t& b, const point_t& c) {
+        double k1 = a.get_y() * b.get_z() - a.get_z() * b.get_y();
+        double k2 = a.get_z() * b.get_x() - a.get_x() * b.get_z();
+        double k3 = a.get_x() * b.get_y() - a.get_y() * b.get_x();
+
+        return k1 * c.get_x() + k2 * c.get_y() + k3 * c.get_z();
+    }
+
     point_t operator-(const point_t& a) {
         return point_t(-a.get_x(), -a.get_y(), -a.get_z());
     }

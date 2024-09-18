@@ -64,14 +64,11 @@ namespace triangle {
             if (!line.is_valid() || !is_valid())
                 return new coefs_t[3]{false, NAN, NAN};
 
-            segment_t ab(a_, b_);
-            segment_t bc(b_, c_);
-            segment_t ca(c_, a_);
-
+            segment_t segs[3] = {{a_, b_}, {b_, c_}, {c_, a_}};
             coefs_t* coefs = new coefs_t[3]{false, NAN, NAN};
-            coefs[0] = ab.get_line_intersect(line);
-            coefs[1] = bc.get_line_intersect(line);
-            coefs[2] = ca.get_line_intersect(line);
+
+            for (int i = 0; i < 3; ++i)
+                coefs[i] = segs[i].get_line_intersect(line);
 
             return coefs;
         }
@@ -114,7 +111,57 @@ namespace triangle {
 
             return false;
         }
+
+        bool is_triangle_is_point() const {
+            return ((a_ == b_) && (b_ == c_));
+        }
+
+        bool is_triangle_is_line() const {
+            line_t ab(a_, b_ - a_);
+            line_t bc(b_, c_ - b_);
+            line_t ca(c_, a_ - c_);
+
+            return (is_lines_parallel(ab, bc) ||
+                    is_lines_parallel(bc, ca) ||
+                    is_lines_parallel(ab, ca));
+        }
+
+        line_t triangle_to_line() const {
+            if (!is_triangle_is_line())
+                return line_t();
+
+            line_t ab(a_, b_ - a_);
+            line_t bc(b_, c_ - b_);
+            line_t ca(c_, a_ - c_);
+
+            if (is_lines_parallel(ab, bc))
+                return line_t(a_, b_ - a_);
+
+            if (is_lines_parallel(bc, ca))
+                return line_t(b_, c_ - b_);
+
+            if (is_lines_parallel(ab, ca))
+                return line_t(a_, b_ - a_);
+
+            return line_t();
+        }
     };
+
+        bool is_line_intersect_triangle(const triangle_t& a, const line_t& line) {
+            if (a.get_plane().norm().normal() == line.get_v().norm()) {
+                if (a.get_plane().is_point_in(line.get_x()))
+                    return true;
+                else
+                    return false;
+            }
+
+            point_t p = a.get_plane().get_intersect_line(line);
+
+            if (a.is_point_in(p))
+                return true;
+
+            return false;
+        }
 
     bool is_triangles_intersect_in_plane(const triangle_t& a, const triangle_t& b) {
         if (a.is_triangle_vertexes_inside(b) ||
@@ -155,6 +202,29 @@ namespace triangle {
         return false;
     }
 
+    bool is_intersect_simple_figure(const triangle_t& a, const triangle_t& b) {
+        if (a.is_triangle_is_point())
+            return b.is_point_in(a.get_a());
+
+        if (b.is_triangle_is_point())
+            return a.is_point_in(b.get_a());
+
+        line_t line_a = a.triangle_to_line();
+        line_t line_b = b.triangle_to_line();
+
+        if (a.is_triangle_is_line() &&
+            b.is_triangle_is_line())
+            return is_lines_intersect(line_a, line_b);
+
+        if (a.is_triangle_is_line())
+            return is_line_intersect_triangle(b, line_a);
+
+        if (b.is_triangle_is_line())
+            return is_line_intersect_triangle(a, line_b);
+
+        return false;
+    }
+
     bool is_triangles_intersect(const triangle_t& a, const triangle_t& b) {
         plane_t plane_a(a.get_a(), a.get_b(), a.get_c());
         plane_t plane_b(b.get_a(), b.get_b(), b.get_c());
@@ -165,9 +235,22 @@ namespace triangle {
         if (is_planes_parallel(plane_a, plane_b))
             return false;
 
-        line_t   line_inter = get_planes_intersection(plane_a, plane_b);
-        coefs_t* coefs_a    = a.get_line_intersect_edges(line_inter);
-        coefs_t* coefs_b    = b.get_line_intersect_edges(line_inter);
+        line_t line_inter = get_planes_intersection(plane_a, plane_b);
+
+        if (!line_inter.get_v().is_valid())
+            return is_intersect_simple_figure(a, b);
+            
+
+        coefs_t* coefs_a = a.get_line_intersect_edges(line_inter);
+        coefs_t* coefs_b = b.get_line_intersect_edges(line_inter);
+
+        for (int i = 0; i < 3; i++) {
+            std::cerr << coefs_a[i].is_valid_ << " " << coefs_a[i].k1_ << " " << coefs_a[i].k2_ << "\n";
+        }
+
+        for (int i = 0; i < 3; i++) {
+            std::cerr << coefs_b[i].is_valid_ << " " << coefs_b[i].k1_ << " " << coefs_b[i].k2_ << "\n";
+        }
 
         bool is_coefs_intersection = is_segments_coefs_intersect(coefs_a, coefs_b);
         delete [] coefs_a;
@@ -180,7 +263,7 @@ namespace triangle {
     }
 
     std::set<int> get_set_triangles_in_intersections(int count, const triangle_t* b) {
-        std::set<int> ans{};
+        std::set<int> ans;
         for (int i = 0; i < count; ++i) {
             for (int j = i + 1; j < count; ++j) {
                 if (is_triangles_intersect(b[i], b[j])) {

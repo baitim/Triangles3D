@@ -46,6 +46,17 @@ namespace line {
                 is_lines_parallel(a, dx));
     }
 
+    bool is_lines_intersect(const line_t& a, const line_t& b) {
+        if (a == b)
+            return true;
+
+        point_t M1M2 = b.get_x() - a.get_x();
+        if (is_double_equal(triple_product(M1M2, a.get_v(), b.get_v()), 0))
+            return true;
+
+        return false;
+    }
+
     std::istream& operator>>(std::istream& is, line_t& l) {
         is >> l.set_x() >> l.set_v();
         return is;

@@ -75,6 +75,32 @@ namespace plane {
                     !std::isnan(C_) &&
                     !std::isnan(D_));
         }
+
+        bool is_point_in(const point_t& p) const {
+            double res = p.get_x() * A_ + p.get_y() * B_ + p.get_z() * C_ + D_;
+
+            if (is_double_equal(res, 0))
+                return true;
+
+            return false;
+        }
+
+        point_t get_intersect_line(const line_t& line) {
+            double res = - (D_ + 
+                            A_ * line.get_x().get_x() +
+                            B_ * line.get_x().get_y() + 
+                            C_ * line.get_x().get_z());
+
+            res /= (A_ * line.get_v().get_x() +
+                    B_ * line.get_v().get_y() +
+                    C_ * line.get_v().get_z());
+                
+            double a = line.get_x().get_x() + line.get_v().get_x() * res;
+            double b = line.get_x().get_y() + line.get_v().get_y() * res;
+            double c = line.get_x().get_z() + line.get_v().get_z() * res;
+
+            return (point_t){a, b, c};
+        }
     };
 
     bool is_planes_parallel(const plane_t& a, const plane_t& b) {

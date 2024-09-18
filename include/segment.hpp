@@ -35,9 +35,6 @@ namespace segment {
             if (!line.is_valid() || !is_valid())
                 return coefs_t(false);
 
-            if (x_ == line.get_x())
-                return coefs_t{true, 0};
-
             line_t seg_line = line_t(x_, y_ - x_);
 
             double line_xx = line.get_x().get_x();
@@ -65,6 +62,9 @@ namespace segment {
                 double k = dPxV2.length() / V1xV2.length();
                 if (V1xV2.norm() == -dPxV2.norm())
                     k *= -1;
+
+                if (!is_point_in(line.get_x() + line.get_v() * k))
+                    return coefs_t{false};
 
                 return coefs_t(true, k);
             }
