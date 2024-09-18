@@ -226,3 +226,29 @@ TEST(Triangle_main, test_point_in_triangle)
     ASSERT_EQ(t1.is_point_in(tp3), true);
     ASSERT_EQ(t1.is_point_in(tp4), true);
 }
+
+TEST(Triangle_main, test_line_intersect_edges)
+{
+    point::point_t p1(1,  2, 3);
+    point::point_t p2(3,  4, 3);
+    point::point_t p3(3, -1, 3);
+    triangle::triangle_t t1(p1, p2, p3);
+
+    point::point_t p4(2, -1,  6);
+    point::point_t p5(-1, 3, -3);
+    line::line_t l1(p4, p5);
+
+    ASSERT_EQ(t1.is_line_intersect_edges(l1), true);
+
+    point::point_t p6(1,  4, 3);
+    point::point_t p7(3, -1, 0);
+    line::line_t l2(p4, p5);
+
+    ASSERT_EQ(t1.is_line_intersect_edges(l2), true);
+
+    point::point_t p8(2, 2,  4.42);
+    point::point_t p9(1, 1, -1);
+    line::line_t l3(p8, p9);
+
+    ASSERT_EQ(t1.is_line_intersect_edges(l3), false);
+}

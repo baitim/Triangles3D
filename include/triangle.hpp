@@ -59,9 +59,20 @@ namespace triangle {
                     triag_plane.is_valid());
         }
 
-        bool is_line_intersect(const line_t& line) const {
+        bool is_line_intersect_edges(const line_t& line) const {
             if (!line.is_valid() || !is_valid())
                 return false;
+
+            segment_t ab(a_, b_);
+            segment_t bc(b_, c_);
+            segment_t ca(c_, a_);
+
+            if (ab.is_line_intersect(line) ||
+                bc.is_line_intersect(line) ||
+                ca.is_line_intersect(line))
+                return true;
+
+            return false;
         }
     };
 
