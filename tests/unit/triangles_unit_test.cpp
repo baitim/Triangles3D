@@ -43,12 +43,12 @@ TEST(Point_main, test_point_length)
 TEST(Line_main, test_line_opers)
 {
     point::point_t p1(3, 4, 5);
-    point::point_t p2(6, 3, 2);
+    point::point_t p2(4, 2, 2);
 
     line::line_t l1(p1, p2);
 
-    point::point_t p3(1, 2, 7);
-    point::point_t p4(6, 3, 2);
+    point::point_t p3(4, 4, 5);
+    point::point_t p4(4, 2, 2);
 
     line::line_t l2(p3, p4);
 
@@ -61,6 +61,109 @@ TEST(Line_main, test_line_opers)
     ASSERT_EQ(l1, l3);
 }
 
+TEST(Segment_main, test_segment_intersect1)
+{
+    point::point_t p1(1, 1, 1);
+    point::point_t p2(2, 2, 2);
+    segment::segment_t s1(p1, p2);
+
+    point::point_t p3(-1, -1, -1);
+    point::point_t p4(0.5, 0.5, 0.5);
+    segment::segment_t s2(p3, p4);
+    segment::segment_t s3(p3, p1);
+    segment::segment_t s4(p4, p2);
+
+    ASSERT_EQ(s1.is_segment_intersect(s2), false);
+    ASSERT_EQ(s1.is_segment_intersect(s3), true);
+    ASSERT_EQ(s1.is_segment_intersect(s4), true);
+
+    point::point_t p5(2, 0, 1);
+    segment::segment_t s5(p5, p1);
+    ASSERT_EQ(s1.is_segment_intersect(s5), true);
+
+    point::point_t p6(1.5, 1.5, 1.5);
+    segment::segment_t s6(p5, p6);
+    ASSERT_EQ(s1.is_segment_intersect(s6), true);
+
+    point::point_t p7(1.6, 1.5, 1.5);
+    segment::segment_t s7(p5, p7);
+    ASSERT_EQ(s1.is_segment_intersect(s7), false);
+
+    ASSERT_EQ(s1.is_point_in(point::point_t(1.5, 1.5, 1.5)), true);
+    ASSERT_EQ(s1.is_point_in(p7), false);
+}
+
+TEST(Segment_main, test_segment_intersect2)
+{
+    point::point_t p1(3, 3, 1);
+    point::point_t p2(6, 6, 1);
+    point::point_t p3(6, 3, 1);
+    segment::segment_t s12(p1, p2);
+    segment::segment_t s23(p2, p3);
+    segment::segment_t s31(p3, p1);
+
+    ASSERT_EQ(s12.is_segment_intersect(s23), true);
+    ASSERT_EQ(s12.is_segment_intersect(s31), true);
+    ASSERT_EQ(s23.is_segment_intersect(s31), true);
+
+
+    point::point_t p4(0, 4, 1);
+    point::point_t p5(0, 5, 1);
+    point::point_t p6(2, 4, 1);
+    segment::segment_t s45(p4, p5);
+    segment::segment_t s56(p5, p6);
+    segment::segment_t s64(p6, p4);
+
+    ASSERT_EQ(s45.is_segment_intersect(s56), true);
+    ASSERT_EQ(s45.is_segment_intersect(s64), true);
+    ASSERT_EQ(s56.is_segment_intersect(s64), true);
+
+    ASSERT_EQ(s12.is_segment_intersect(s45), false);
+    ASSERT_EQ(s12.is_segment_intersect(s56), false);
+    ASSERT_EQ(s12.is_segment_intersect(s64), false);
+    ASSERT_EQ(s23.is_segment_intersect(s45), false);
+    ASSERT_EQ(s23.is_segment_intersect(s56), false);
+    ASSERT_EQ(s23.is_segment_intersect(s64), false);
+    ASSERT_EQ(s31.is_segment_intersect(s45), false);
+    ASSERT_EQ(s31.is_segment_intersect(s56), false);
+    ASSERT_EQ(s31.is_segment_intersect(s64), false);
+}
+
+TEST(Segment_main, test_segment_intersect3)
+{
+    point::point_t p1(3, 0, 1);
+    point::point_t p2(7, 5, 1);
+    point::point_t p3(7, 0, 1);
+    segment::segment_t s12(p1, p2);
+    segment::segment_t s23(p2, p3);
+    segment::segment_t s31(p3, p1);
+
+    point::point_t p4(3, 0, 1);
+    point::point_t p5(0, 3, 1);
+    point::point_t p6(3, 3, 3);
+    segment::segment_t s45(p4, p5);
+    segment::segment_t s56(p5, p6);
+    segment::segment_t s64(p6, p4);
+
+    ASSERT_EQ(s12.is_segment_intersect(s23), true);
+    ASSERT_EQ(s12.is_segment_intersect(s31), true);
+    ASSERT_EQ(s23.is_segment_intersect(s31), true);
+
+    ASSERT_EQ(s45.is_segment_intersect(s56), true);
+    ASSERT_EQ(s45.is_segment_intersect(s64), true);
+    ASSERT_EQ(s56.is_segment_intersect(s64), true);
+
+    ASSERT_EQ(s12.is_segment_intersect(s45), true);
+    ASSERT_EQ(s12.is_segment_intersect(s56), false);
+    ASSERT_EQ(s12.is_segment_intersect(s64), true);
+    ASSERT_EQ(s23.is_segment_intersect(s45), false);
+    ASSERT_EQ(s23.is_segment_intersect(s56), false);
+    ASSERT_EQ(s23.is_segment_intersect(s64), false);
+    ASSERT_EQ(s31.is_segment_intersect(s45), true);
+    ASSERT_EQ(s31.is_segment_intersect(s56), false);
+    ASSERT_EQ(s31.is_segment_intersect(s64), true);
+}
+
 TEST(Segment_main, test_segment_line_intersection)
 {
     point::point_t p1(1, 1, 1);
@@ -69,27 +172,27 @@ TEST(Segment_main, test_segment_line_intersection)
 
     line::line_t l1(p1, p2 - p1);
 
-    ASSERT_EQ(s1.is_line_intersect(l1), true);
+    ASSERT_EQ(s1.get_line_intersect(l1).is_valid_, true);
 
     point::point_t p3(p2 + 1);
     line::line_t l2(p1 - 1, p3);
 
-    ASSERT_EQ(s1.is_line_intersect(l2), true);
+    ASSERT_EQ(s1.get_line_intersect(l2).is_valid_, true);
 
     point::point_t p4((p1 + p2) / 2);
     line::line_t l3(p3, p4 - p3);
 
-    ASSERT_EQ(s1.is_line_intersect(l3), true);
+    ASSERT_EQ(s1.get_line_intersect(l3).is_valid_, true);
 
     point::point_t p5(0, 0, 0);
     point::point_t p6(1, 0, 1);
     line::line_t l4(p5, p6);
-    ASSERT_EQ(s1.is_line_intersect(l4), false);
+    ASSERT_EQ(s1.get_line_intersect(l4).is_valid_, false);
 
     point::point_t p7(0, 0, 0);
     point::point_t p8(1, 1, 1);
     line::line_t l5(p7, p8);
-    ASSERT_EQ(s1.is_line_intersect(l5), true);
+    ASSERT_EQ(s1.get_line_intersect(l5).is_valid_, true);
 }
 
 TEST(Plane_main, test_plane_opers)
@@ -133,6 +236,7 @@ TEST(Plane_main, test_plane_intersection_exist)
     plane::plane_t pl2(p4, p5, p6);
 
     point::point_t ans(27784, 74880, 27368);
+    ans = ans.norm();
 
     ASSERT_EQ(plane::get_planes_intersection(pl1, pl2).get_v(), ans);
 }
@@ -251,4 +355,189 @@ TEST(Triangle_main, test_line_intersect_edges)
     line::line_t l3(p8, p9);
 
     ASSERT_EQ(t1.is_line_intersect_edges(l3), false);
+}
+
+TEST(Triangle_main, test_triangles_intersect1)
+{
+    point::point_t p1(6, 0, 1);
+    point::point_t p2(0, 6, 1);
+    point::point_t p3(0, 0, 1);
+    triangle::triangle_t t1(p1, p2, p3);
+
+    point::point_t p4(3, 3, 1);
+    point::point_t p5(6, 6, 1);
+    point::point_t p6(6, 3, 1);
+    triangle::triangle_t t2(p4, p5, p6);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t2), true);
+
+    point::point_t p7(0, 4, 1);
+    point::point_t p8(0, 5, 1);
+    point::point_t p9(2, 4, 1);
+    triangle::triangle_t t3(p7, p8, p9);
+    ASSERT_EQ(triangle::is_triangles_intersect(t2, t3), false);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t3), true);
+}
+
+TEST(Triangle_main, test_triangles_intersect2)
+{
+    point::point_t p1(6, 0, 1);
+    point::point_t p2(0, 6, 1);
+    point::point_t p3(0, 0, 1);
+    triangle::triangle_t t1(p1, p2, p3);
+
+    point::point_t p4(-7, -2, 1);
+    point::point_t p5( 0, -2, 1);
+    point::point_t p6( 0,  8, 1);
+    triangle::triangle_t t2(p4, p5, p6);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t2), true);
+
+    point::point_t p7(-9, -2, 1);
+    point::point_t p8( 0, -2, 1);
+    point::point_t p9( 0,  8, 1);
+    triangle::triangle_t t3(p7, p8, p9);
+    ASSERT_EQ(triangle::is_triangles_intersect(t2, t3), true);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t3), true);
+}
+
+TEST(Triangle_main, test_triangles_intersect3)
+{
+    point::point_t p1(6, 0, 1);
+    point::point_t p2(0, 6, 1);
+    point::point_t p3(0, 0, 1);
+    triangle::triangle_t t1(p1, p2, p3);
+
+    point::point_t p4(3, 0, 1);
+    point::point_t p5(7, 5, 1);
+    point::point_t p6(7, 0, 1);
+    triangle::triangle_t t2(p4, p5, p6);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t2), true);
+
+    point::point_t p7(3, 0, 1);
+    point::point_t p8(0, 3, 1);
+    point::point_t p9(3, 3, 3);
+    triangle::triangle_t t3(p7, p8, p9);
+
+    ASSERT_EQ(triangle::is_triangles_intersect(t2, t3), true);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t3), true);
+}
+
+TEST(Triangle_main, test_triangles_intersect4)
+{
+    point::point_t p1(6, 0, 1);
+    point::point_t p2(0, 6, 1);
+    point::point_t p3(0, 0, 1);
+    triangle::triangle_t t1(p1, p2, p3);
+
+    point::point_t p4( 6, -1, 1);
+    point::point_t p5(-1,  6, 1);
+    point::point_t p6(-1, -1, 1);
+    triangle::triangle_t t2(p4, p5, p6);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t2), true);
+
+    point::point_t p7(0,  0,  1);
+    point::point_t p8(7,  11, 1);
+    point::point_t p9(10, 9,  1);
+    triangle::triangle_t t3(p7, p8, p9);
+
+    ASSERT_EQ(triangle::is_triangles_intersect(t2, t3), true);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t3), true);
+}
+
+TEST(Triangle_main, test_triangles_intersect5)
+{
+    point::point_t p1(6, 0, 1);
+    point::point_t p2(0, 6, 1);
+    point::point_t p3(0, 0, 1);
+    triangle::triangle_t t1(p1, p2, p3);
+
+    point::point_t p4( 2,  2, 1);
+    point::point_t p5( 2, -3, 1);
+    point::point_t p6(-2,  3, 1);
+    triangle::triangle_t t2(p4, p5, p6);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t2), true);
+
+    point::point_t p7( 2, 2, 1);
+    point::point_t p8(-1, 2, 1);
+    point::point_t p9( 2, 7, 1);
+    triangle::triangle_t t3(p7, p8, p9);
+
+    ASSERT_EQ(triangle::is_triangles_intersect(t2, t3), true);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t3), true);
+}
+
+TEST(Triangle_main, test_triangles_intersect6)
+{
+    point::point_t p1(6, 0, 1);
+    point::point_t p2(0, 6, 1);
+    point::point_t p3(0, 0, 1);
+    triangle::triangle_t t1(p1, p2, p3);
+
+    point::point_t p4(-1,  2, 1);
+    point::point_t p5( 2, -1, 1);
+    point::point_t p6( 4,  4, 1);
+    triangle::triangle_t t2(p4, p5, p6);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t2), true);
+
+    point::point_t p7(1,   2,    4);
+    point::point_t p8(2,   1,    3);
+    point::point_t p9(1.5, 1.5, -2);
+    triangle::triangle_t t3(p7, p8, p9);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t3), true);
+    ASSERT_EQ(triangle::is_triangles_intersect(t2, t3), true);
+}
+
+TEST(Triangle_main, test_triangles_intersect7)
+{
+    point::point_t p1(6, 0, 1);
+    point::point_t p2(0, 6, 1);
+    point::point_t p3(0, 0, 1);
+    triangle::triangle_t t1(p1, p2, p3);
+
+    point::point_t p4(-1,  2, 5);
+    point::point_t p5( 5,  0, 1);
+    point::point_t p6( 4, -2, 1);
+    triangle::triangle_t t2(p4, p5, p6);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t2), true);
+
+    point::point_t p7(1, 2, -5);
+    point::point_t p8(1, 3, 1);
+    point::point_t p9(3, 1, 1);
+    triangle::triangle_t t3(p7, p8, p9);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t3), true);
+    ASSERT_EQ(triangle::is_triangles_intersect(t2, t3), false);
+
+    point::point_t p10(1, 2, -5);
+    point::point_t p11(1, 3, 3);
+    point::point_t p12(3, 1, 3);
+    triangle::triangle_t t4(p10, p11, p12);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t4), true);
+
+    ASSERT_EQ(triangle::is_triangles_intersect(t3, t4), true);
+}
+
+TEST(Triangle_main, test_triangles_intersect8)
+{
+    point::point_t p1(6, 0, 1);
+    point::point_t p2(0, 6, 1);
+    point::point_t p3(0, 0, 1);
+    triangle::triangle_t t1(p1, p2, p3);
+
+    point::point_t p4(2, 2, 2);
+    point::point_t p5(2, 0, 0);
+    point::point_t p6(5, 5, 1);
+    triangle::triangle_t t2(p4, p5, p6);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t2), true);
+
+    point::point_t p7(2, 3,  4);
+    point::point_t p8(3, 2, -1);
+    point::point_t p9(7, 7,  2);
+    triangle::triangle_t t3(p7, p8, p9);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t3), true);
+
+    point::point_t p10(-100, 3,  100);
+    point::point_t p11( 100, 3,  100);
+    point::point_t p12( 3,   3, -100);
+    triangle::triangle_t t4(p10, p11, p12);
+
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t4), true);
 }

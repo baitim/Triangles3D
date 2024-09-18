@@ -5,7 +5,9 @@
 #include "doubles.hpp"
 
 namespace point {
-    class point_t {
+    using namespace doubles;
+
+    class point_t final {
         double x_, y_, z_;
 
     public:
@@ -79,16 +81,10 @@ namespace point {
         return a = a - b;
     }
 
-    bool operator<(const point_t& a, const point_t& b) {
-        return (doubles::is_double_equal(a.get_x(), b.get_x()) &&
-                doubles::is_double_equal(a.get_y(), b.get_y()) &&
-                doubles::is_double_equal(a.get_z(), b.get_z()));
-    }
-
     bool operator==(const point_t& a, const point_t& b) {
-        return (doubles::is_double_equal(a.get_x(), b.get_x()) &&
-                doubles::is_double_equal(a.get_y(), b.get_y()) &&
-                doubles::is_double_equal(a.get_z(), b.get_z()));
+        return (is_double_equal(a.get_x(), b.get_x()) &&
+                is_double_equal(a.get_y(), b.get_y()) &&
+                is_double_equal(a.get_z(), b.get_z()));
     }
 
     std::istream& operator>>(std::istream& is, point_t& p) {

@@ -7,7 +7,7 @@
 namespace line {
     using namespace point;
 
-    class line_t {
+    class line_t final {
         point_t x_;
         point_t v_;
 
@@ -33,7 +33,8 @@ namespace line {
     };
 
     bool is_lines_parallel(const line_t& a, const line_t& b) {
-        return (a.get_v().norm() == b.get_v().norm());
+        return (a.get_v().norm() ==  b.get_v().norm() ||
+                a.get_v().norm() == -b.get_v().norm());
     }
 
     bool operator==(const line_t& a, const line_t& b) {

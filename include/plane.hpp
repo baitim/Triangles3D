@@ -5,7 +5,7 @@
 namespace plane {
     using namespace segment;
 
-    class plane_t {
+    class plane_t final {
         double A_, B_, C_, D_;
 
     public:
@@ -26,9 +26,9 @@ namespace plane {
         }
         
         plane_t(segment_t ab, segment_t bc, segment_t ca) {
-            point_t a = ab.get_first();
-            point_t b = bc.get_first();
-            point_t c = ca.get_first();
+            point_t a = ab.get_x();
+            point_t b = bc.get_x();
+            point_t c = ca.get_x();
 
             *this = plane_t(a, b, c);
         }
@@ -37,13 +37,13 @@ namespace plane {
             plane_t norm{*this};
 
             double factor = 1;
-            if (!doubles::is_double_equal(A_, 0)) {
+            if (!is_double_equal(A_, 0)) {
                 factor /= A_;
-            } else if (!doubles::is_double_equal(B_, 0)) {
+            } else if (!is_double_equal(B_, 0)) {
                 factor /= B_;
-            } else if (!doubles::is_double_equal(C_, 0)) {
+            } else if (!is_double_equal(C_, 0)) {
                 factor /= C_;
-            } else if (!doubles::is_double_equal(D_, 0)) {
+            } else if (!is_double_equal(D_, 0)) {
                 factor /= D_;
             }
 
@@ -85,21 +85,15 @@ namespace plane {
         if (!a.is_valid() || !b.is_valid() || is_planes_parallel(a, b))
             return line_t();
 
-        point_t N1 = a.normal();
-        point_t N2 = b.normal();
+        point_t line_v = cross_product(a.normal(), b.normal()).norm();
+        double x = 0, y = 0, z = 0;
 
-        point_t line_v = cross_product(N1, N2);
-        point_t line_point = line_v;
+        y = (a.get_C() * b.get_D() - b.get_C() * a.get_D()) /
+            (a.get_B() * b.get_C() - a.get_C() * b.get_B());
 
-        double line_D = a.get_D() - a.get_A() * line_v.get_x()
-                                  - a.get_B() * line_v.get_y()
-                                  - a.get_C() * line_v.get_z();
+        z = -(a.get_D() + a.get_B() * y) / a.get_C();
 
-        double coef = line_D / (line_v.get_x() + line_v.get_y() + line_v.get_z());                
-        line_point.set_x() -= coef * line_v.get_x();
-        line_point.set_y() -= coef * line_v.get_y();
-        line_point.set_z() -= coef * line_v.get_z();
-
+        point_t line_point(x, y, z);
         return line_t(line_point, line_v);
     }
 
@@ -108,7 +102,11 @@ namespace plane {
         plane_t b_norm = b.norm();
 
         return (is_planes_parallel(a, b) &&
-                doubles::is_double_equal(a_norm.get_D(), b_norm.get_D()));
+                is_double_equal(a_norm.get_D(), b_norm.get_D()));
+    }
+
+    bool operator!=(const plane_t& a, const plane_t& b) {
+        return !(a == b);
     }
 
     std::istream& operator>>(std::istream& is, plane_t& pl) {
@@ -117,8 +115,8 @@ namespace plane {
     }
 
     std::ostream& operator<<(std::ostream& os, const plane_t& pl) {
-        os << print_lgreen("Plane(") << pl.get_A() << print_lgreen(",") << pl.get_B() <<
-              print_lgreen(",") << pl.get_C() << print_lgreen(",") << pl.get_D() << print_lgreen(")");
+        os << print_lgreen("Plane(" << pl.get_A() << "," << pl.get_B() << "," << pl.get_C() <<
+                           "," << pl.get_D() << ")");
         return os;
     }
 }
