@@ -174,7 +174,7 @@ namespace triangle {
         if (a.is_triangle_vertexes_inside(b) ||
             b.is_triangle_vertexes_inside(a))
             return true;
-            
+
         if (a.is_edges_intersect_edges(b))
             return true;
 
@@ -199,11 +199,11 @@ namespace triangle {
             }
         }
 
-        segment_t coefs_a_range{coefs_a1.k1_, coefs_a2.k1_};
-        segment_t coefs_b_range{coefs_b1.k1_, coefs_b2.k1_};
+        segment_t coefs_a_range{coefs_a1.k_, coefs_a2.k_};
+        segment_t coefs_b_range{coefs_b1.k_, coefs_b2.k_};
 
-        if (coefs_a_range.is_point_in(coefs_b1.k1_) || coefs_a_range.is_point_in(coefs_b2.k1_) ||
-            coefs_b_range.is_point_in(coefs_a1.k1_) || coefs_b_range.is_point_in(coefs_a2.k1_))
+        if (coefs_a_range.is_point_in(coefs_b1.k_) || coefs_a_range.is_point_in(coefs_b2.k_) ||
+            coefs_b_range.is_point_in(coefs_a1.k_) || coefs_b_range.is_point_in(coefs_a2.k_))
             return true;
         
         return false;

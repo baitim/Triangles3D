@@ -75,7 +75,7 @@ namespace plane {
         double get_C() const { return C_; }
         double get_D() const { return D_; }
 
-        bool is_points_set_plane(const point_t& a, const point_t& b, const point_t& c) {
+        bool is_points_set_plane(const point_t& a, const point_t& b, const point_t& c) const {
             if (is_points_segment(a, b, c) ||
                 (a == b && b == c)) {
                 return false;

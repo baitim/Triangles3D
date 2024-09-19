@@ -7,10 +7,9 @@ namespace segment {
 
     struct coefs_t final {
         bool is_valid_;
-        double k1_, k2_;
-        coefs_t(bool is_valid) : is_valid_(is_valid), k1_(NAN), k2_(NAN) {}
-        coefs_t(bool is_valid, double k) : is_valid_(is_valid), k1_(k), k2_(NAN) {}
-        coefs_t(bool is_valid, double k1, double k2) : is_valid_(is_valid), k1_(k1), k2_(k2) {}
+        double k_;
+        coefs_t(bool is_valid) : is_valid_(is_valid), k_(NAN) {}
+        coefs_t(bool is_valid, double k) : is_valid_(is_valid), k_(k) {}
     };
 
     class segment_t final {
@@ -31,22 +30,34 @@ namespace segment {
             return (x_.is_valid() && y_.is_valid());
         }
 
+        coefs_t get_lines_intersect_parallel(const line_t& line, const line_t& seg_line) const {
+            double line_xx = line.get_x().get_x();
+            double line_vx = line.get_v().get_x();
+            double seg_xx  = seg_line.get_x().get_x();
+            double seg_vx  = seg_line.get_v().get_x();
+
+            segment_t valid_diap(0, 1);
+
+            double k[4];
+            k[0] = (seg_xx - line_xx) / line_vx;
+            k[1] = (seg_xx + seg_vx - line_xx) / line_vx;
+            k[2] = (line_xx - seg_xx + seg_vx) / line_vx;
+            k[3] = (line_xx - seg_xx + seg_vx) / line_vx;
+            for (int i = 0; i < 4; ++i)
+                if (valid_diap.is_point_in(k[i]))
+                    return coefs_t(true, k[i]);
+
+            return coefs_t{true, 0};
+        }
+
         coefs_t get_line_intersect(const line_t& line) const { // a * (V1 x V2) = (P2 - P1) x V2
             if (!line.is_valid() || !is_valid())
                 return coefs_t(false);
 
             line_t seg_line = line_t(x_, y_ - x_);
 
-            double line_xx = line.get_x().get_x();
-            double line_vx = line.get_v().get_x();
-            double seg_xx  = seg_line.get_x().get_x();
-            double seg_vx  = seg_line.get_v().get_x();
-
-            if (seg_line == line) {
-                double k1 = (line_xx - seg_xx) / seg_vx;
-                double k2 = (seg_xx - line_xx + line_vx) / seg_vx;
-                return coefs_t(true, k1, k2);
-            }
+            if (seg_line == line)
+                return get_lines_intersect_parallel(line, seg_line);
 
             if (is_lines_parallel(seg_line, line))
                 return coefs_t{false};
@@ -76,31 +87,27 @@ namespace segment {
             if (!segment.is_valid() || !is_valid())
                 return false;
 
-            line_t line = line_t(segment.get_x(), segment.get_y() - segment.get_x());
+            point_t segment_v(segment.get_y() - segment.get_x());
+            line_t  line(segment.get_x(), segment_v);
 
             coefs_t coefs = get_line_intersect(line);
-            if (!coefs.is_valid_)
+            segment_t valid_diap(0, 1);
+
+            if (!coefs.is_valid_ ||
+                !valid_diap.is_point_in(coefs.k_))
                 return false;
 
-            double x = x_.get_x();
-            double y = y_.get_x();
-
-            coefs.k1_ = std::max((double)0, std::min((double)1, coefs.k1_));
-            double line_x = coefs.k1_ * line.get_v().get_x() + line.get_x().get_x();
-            if (is_double_in_range(line_x, x, y))
+            double line_x = coefs.k_ * line.get_v().get_x() + line.get_x().get_x();
+            if (is_double_in_range(line_x, x_.get_x(), y_.get_x()))
                 return true;
-
-            if (!std::isnan(coefs.k2_)) {
-                coefs.k2_ = std::max((double)0, std::min((double)1, coefs.k2_));
-                line_x = coefs.k2_ * line.get_v().get_x() + line.get_x().get_x();
-                if (is_double_in_range(line_x, x, y))
-                    return true;
-            }
 
             return false;
         }
 
         bool is_point_in(const point_t& p) const {
+            if (!p.is_valid())
+                return false;
+
             if (is_double_eq((y_ - x_).length(), (p - x_).length() + (p - y_).length()))
                 return true;
             
