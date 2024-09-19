@@ -36,13 +36,13 @@ namespace segment {
             double seg_xx  = seg_line.get_x().get_x();
             double seg_vx  = seg_line.get_v().get_x();
 
-            segment_t valid_diap(0, 1);
-
-            double k[4];
+            double k[4] = {};
             k[0] = (seg_xx - line_xx) / line_vx;
             k[1] = (seg_xx + seg_vx - line_xx) / line_vx;
             k[2] = (line_xx - seg_xx + seg_vx) / line_vx;
             k[3] = (line_xx - seg_xx + seg_vx) / line_vx;
+
+            segment_t valid_diap(0, 1);
             for (int i = 0; i < 4; ++i)
                 if (valid_diap.is_point_in(k[i]))
                     return coefs_t(true, k[i]);
