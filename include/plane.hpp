@@ -13,6 +13,11 @@ namespace plane {
         plane_t(double A, double B, double C, double D) : A_(A), B_(B), C_(C), D_(D) {}
 
         plane_t(point_t a, point_t b, point_t c) {
+            if (!is_points_set_plane(a, b, c)) {
+                *this = plane_t();
+                return;
+            }
+ 
             float a1 = b.get_x() - a.get_x();
             float b1 = b.get_y() - a.get_y();
             float c1 = b.get_z() - a.get_z();
@@ -30,6 +35,11 @@ namespace plane {
             point_t b = bc.get_x();
             point_t c = ca.get_x();
 
+            if (!is_points_set_plane(a, b, c)) {
+                *this = plane_t();
+                return;
+            }
+
             *this = plane_t(a, b, c);
         }
 
@@ -37,13 +47,13 @@ namespace plane {
             plane_t norm{*this};
 
             double factor = 1;
-            if (!is_double_equal(A_, 0)) {
+            if (is_double_ne(A_, 0)) {
                 factor /= A_;
-            } else if (!is_double_equal(B_, 0)) {
+            } else if (is_double_ne(B_, 0)) {
                 factor /= B_;
-            } else if (!is_double_equal(C_, 0)) {
+            } else if (is_double_ne(C_, 0)) {
                 factor /= C_;
-            } else if (!is_double_equal(D_, 0)) {
+            } else if (is_double_ne(D_, 0)) {
                 factor /= D_;
             }
 
@@ -65,6 +75,14 @@ namespace plane {
         double get_C() const { return C_; }
         double get_D() const { return D_; }
 
+        bool is_points_set_plane(const point_t& a, const point_t& b, const point_t& c) {
+            if (is_points_segment(a, b, c) ||
+                (a == b && b == c)) {
+                return false;
+            }
+            return true;
+        }
+
         point_t normal() const {
             return point_t(A_, B_, C_);
         }
@@ -79,25 +97,30 @@ namespace plane {
         bool is_point_in(const point_t& p) const {
             double res = p.get_x() * A_ + p.get_y() * B_ + p.get_z() * C_ + D_;
 
-            if (is_double_equal(res, 0))
+            if (is_double_eq(res, 0))
                 return true;
 
             return false;
         }
 
-        point_t get_intersect_line(const line_t& line) {
-            double res = - (D_ + 
-                            A_ * line.get_x().get_x() +
-                            B_ * line.get_x().get_y() + 
-                            C_ * line.get_x().get_z());
+        point_t get_intersect_line(const line_t& line) const {
+            double coef = (A_ * line.get_v().get_x() +
+                           B_ * line.get_v().get_y() +
+                           C_ * line.get_v().get_z());
 
-            res /= (A_ * line.get_v().get_x() +
-                    B_ * line.get_v().get_y() +
-                    C_ * line.get_v().get_z());
-                
-            double a = line.get_x().get_x() + line.get_v().get_x() * res;
-            double b = line.get_x().get_y() + line.get_v().get_y() * res;
-            double c = line.get_x().get_z() + line.get_v().get_z() * res;
+            if (is_double_eq(coef, 0))
+                return line.get_x();
+
+            double t = - (D_ + 
+                          A_ * line.get_x().get_x() +
+                          B_ * line.get_x().get_y() + 
+                          C_ * line.get_x().get_z());
+
+            t /= coef;
+
+            double a = line.get_x().get_x() + line.get_v().get_x() * t;
+            double b = line.get_x().get_y() + line.get_v().get_y() * t;
+            double c = line.get_x().get_z() + line.get_v().get_z() * t;
 
             return (point_t){a, b, c};
         }
@@ -114,12 +137,13 @@ namespace plane {
         point_t line_v = cross_product(a.normal(), b.normal()).norm();
         double x = 0, y = 0, z = 0;
 
-        y = (a.get_C() * b.get_D() - b.get_C() * a.get_D()) /
-            (a.get_B() * b.get_C() - a.get_C() * b.get_B());
+        double coef = a.get_B() * b.get_C() - a.get_C() * b.get_B();
+        if (is_double_ne(coef, 0))
+            y = (a.get_C() * b.get_D() - b.get_C() * a.get_D()) / coef;
 
-        if (!is_double_equal(a.get_C(), 0))
+        if (is_double_ne(a.get_C(), 0))
             z = -(a.get_D() + a.get_B() * y) / a.get_C();
-        else if (!is_double_equal(b.get_C(), 0))
+        else if (is_double_ne(b.get_C(), 0))
             z = -(b.get_D() + b.get_B() * y) / b.get_C();
 
         point_t line_point(x, y, z);
@@ -131,7 +155,7 @@ namespace plane {
         plane_t b_norm = b.norm();
 
         return (is_planes_parallel(a, b) &&
-                is_double_equal(a_norm.get_D(), b_norm.get_D()));
+                is_double_eq(a_norm.get_D(), b_norm.get_D()));
     }
 
     bool operator!=(const plane_t& a, const plane_t& b) {

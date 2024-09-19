@@ -44,10 +44,10 @@ namespace triangle {
             double S2 = triangle_square(p,  a_, c_);
             double S3 = triangle_square(p,  b_, c_);
             
-            if (is_double_equal(S1 + S2 + S3, S) &&
-                is_double_less(S1, S) &&
-                is_double_less(S2, S) &&
-                is_double_less(S3, S))
+            if (is_double_eq(S1 + S2 + S3, S) &&
+                is_double_le(S1, S) &&
+                is_double_le(S2, S) &&
+                is_double_le(S3, S))
                 return true;
 
             return false;
@@ -95,19 +95,36 @@ namespace triangle {
             return false;
         }
 
-        bool is_edges_intersect_edges(const triangle_t& tr) const {
-            segment_t t[3] = {segment_t(tr.get_a(), tr.get_b()),
-                              segment_t(tr.get_b(), tr.get_c()),
-                              segment_t(tr.get_c(), tr.get_a())};
-
+        bool is_segment_intersect_edges(const segment_t& s) const {
             segment_t curr[3] = {segment_t(get_a(), get_b()),
                                  segment_t(get_b(), get_c()),
                                  segment_t(get_c(), get_a())};
 
             for (int i = 0; i < 3; ++i)
-                for (int j = 0; j < 3; ++j)
-                    if (t[i].is_segment_intersect(curr[j]))
-                        return true;
+                if (curr[i].is_segment_intersect(s))
+                    return true;
+
+            return false;
+        }
+
+        bool is_edges_intersect_edges(const triangle_t& tr) const {
+            segment_t t[3] = {segment_t(tr.get_a(), tr.get_b()),
+                              segment_t(tr.get_b(), tr.get_c()),
+                              segment_t(tr.get_c(), tr.get_a())};
+
+            for (int i = 0; i < 3; ++i)
+                if (is_segment_intersect_edges(t[i]))
+                    return true;
+
+            return false;
+        }
+
+        bool is_segment_intersect_triangle(const segment_t& s) const {
+            line_t line = line_t(s.get_x(), s.get_y() - s.get_x());
+
+            point_t p = triag_plane.get_intersect_line(line);
+            if (is_point_in(p))
+                return true;
 
             return false;
         }
@@ -116,34 +133,25 @@ namespace triangle {
             return ((a_ == b_) && (b_ == c_));
         }
 
-        bool is_triangle_is_line() const {
-            line_t ab(a_, b_ - a_);
-            line_t bc(b_, c_ - b_);
-            line_t ca(c_, a_ - c_);
-
-            return (is_lines_parallel(ab, bc) ||
-                    is_lines_parallel(bc, ca) ||
-                    is_lines_parallel(ab, ca));
+        bool is_triangle_is_segment() const {
+            return is_points_segment(a_, b_, c_);
         }
 
-        line_t triangle_to_line() const {
-            if (!is_triangle_is_line())
-                return line_t();
+        segment_t triangle_to_segment() const {
+            if (!is_triangle_is_segment())
+                return segment_t();
 
             line_t ab(a_, b_ - a_);
             line_t bc(b_, c_ - b_);
             line_t ca(c_, a_ - c_);
 
-            if (is_lines_parallel(ab, bc))
-                return line_t(a_, b_ - a_);
+            if (is_lines_parallel(ab, bc) ||
+                is_lines_parallel(bc, ca) ||
+                is_lines_parallel(ab, ca))
+                return segment_t(std::min(a_, std::min(b_, c_)),
+                                 std::max(a_, std::max(b_, c_)));
 
-            if (is_lines_parallel(bc, ca))
-                return line_t(b_, c_ - b_);
-
-            if (is_lines_parallel(ab, ca))
-                return line_t(a_, b_ - a_);
-
-            return line_t();
+            return segment_t();
         }
     };
 
@@ -156,7 +164,6 @@ namespace triangle {
             }
 
             point_t p = a.get_plane().get_intersect_line(line);
-
             if (a.is_point_in(p))
                 return true;
 
@@ -203,43 +210,63 @@ namespace triangle {
     }
 
     bool is_intersect_simple_figure(const triangle_t& a, const triangle_t& b) {
-        if (a.is_triangle_is_point())
-            return b.is_point_in(a.get_a());
+        segment_t segment_a = a.triangle_to_segment();
+        segment_t segment_b = b.triangle_to_segment();
 
-        if (b.is_triangle_is_point())
-            return a.is_point_in(b.get_a());
+        if (a.is_triangle_is_point()) {
+            if (b.is_triangle_is_segment())
+                return segment_b.is_point_in(a.get_a());
+            else
+                return b.is_point_in(a.get_a());
+        }
 
-        line_t line_a = a.triangle_to_line();
-        line_t line_b = b.triangle_to_line();
+        if (b.is_triangle_is_point()) {
+            if (a.is_triangle_is_segment())
+                return segment_a.is_point_in(b.get_a());
+            else
+                return a.is_point_in(b.get_a());
+        }
 
-        if (a.is_triangle_is_line() &&
-            b.is_triangle_is_line())
-            return is_lines_intersect(line_a, line_b);
+        if (a.is_triangle_is_segment() &&
+            b.is_triangle_is_segment())
+            return segment_a.is_segment_intersect(segment_b);
 
-        if (a.is_triangle_is_line())
-            return is_line_intersect_triangle(b, line_a);
+        if (a.is_triangle_is_segment())
+            return b.is_segment_intersect_triangle(segment_a);
 
-        if (b.is_triangle_is_line())
-            return is_line_intersect_triangle(a, line_b);
+        if (b.is_triangle_is_segment())
+            return a.is_segment_intersect_triangle(segment_b);
 
         return false;
     }
 
+    bool operator==(const triangle_t& a, const triangle_t& b) {
+        return (a.get_a() == b.get_a() &&
+                a.get_b() == b.get_b() &&
+                a.get_c() == b.get_c());
+    }
+
     bool is_triangles_intersect(const triangle_t& a, const triangle_t& b) {
+        if (a == b)
+            return true;
+
         plane_t plane_a(a.get_a(), a.get_b(), a.get_c());
         plane_t plane_b(b.get_a(), b.get_b(), b.get_c());
 
-        if (plane_a == plane_b)
+        if (plane_a == plane_b &&
+            plane_a.is_valid() &&
+            plane_b.is_valid())
             return is_triangles_intersect_in_plane(a, b);
 
-        if (is_planes_parallel(plane_a, plane_b))
+        if (is_planes_parallel(plane_a, plane_b) &&
+            plane_a.is_valid() &&
+            plane_b.is_valid())
             return false;
 
         line_t line_inter = get_planes_intersection(plane_a, plane_b);
-
         if (!line_inter.get_v().is_valid())
             return is_intersect_simple_figure(a, b);
-            
+
 
         coefs_t* coefs_a = a.get_line_intersect_edges(line_inter);
         coefs_t* coefs_b = b.get_line_intersect_edges(line_inter);
@@ -269,12 +296,6 @@ namespace triangle {
 
     double triangle_square(const point_t& a, const point_t& b, const point_t& c) {
         return cross_product(b - a, c - a).length() / 2;
-    }
-
-    bool operator==(const triangle_t& a, const triangle_t& b) {
-        return (a.get_a() == b.get_a() &&
-                a.get_b() == b.get_b() &&
-                a.get_c() == b.get_c());
     }
 
     std::istream& operator>>(std::istream& is, triangle_t& t) {

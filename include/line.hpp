@@ -33,6 +33,9 @@ namespace line {
     };
 
     bool is_lines_parallel(const line_t& a, const line_t& b) {
+        if (!a.is_valid() || !b.is_valid())
+            return false;
+
         return (a.get_v().norm() ==  b.get_v().norm() ||
                 a.get_v().norm() == -b.get_v().norm());
     }
@@ -51,7 +54,7 @@ namespace line {
             return true;
 
         point_t M1M2 = b.get_x() - a.get_x();
-        if (is_double_equal(triple_product(M1M2, a.get_v(), b.get_v()), 0))
+        if (is_double_eq(triple_product(M1M2, a.get_v(), b.get_v()), 0))
             return true;
 
         return false;

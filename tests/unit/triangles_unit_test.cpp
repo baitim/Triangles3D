@@ -37,7 +37,7 @@ TEST(Point_main, test_point_length)
     point::point_t p3(3, 4, 4);
 
     ASSERT_NEAR(p1.length(), p2.length(), doubles::EPSILON);
-    ASSERT_EQ(doubles::is_double_equal(p1.length(), p3.length()), false);
+    ASSERT_EQ(doubles::is_double_eq(p1.length(), p3.length()), false);
 }
 
 TEST(Line_main, test_line_opers)
@@ -318,8 +318,8 @@ TEST(Triangle_main, test_triangle_square)
     triangle::triangle_t t5(p2, p3, p5);
 
     ASSERT_NEAR(t4.square(), t5.square(), doubles::EPSILON);
-    ASSERT_EQ(doubles::is_double_equal(t1.square(), t4.square()), false);
-    ASSERT_EQ(doubles::is_double_equal(t2.square(), t5.square()), false);
+    ASSERT_EQ(doubles::is_double_eq(t1.square(), t4.square()), false);
+    ASSERT_EQ(doubles::is_double_eq(t2.square(), t5.square()), false);
 }
 
 TEST(Triangle_main, test_point_in_triangle)
@@ -387,6 +387,7 @@ TEST(Triangle_main, test_triangles_intersect1)
     point::point_t p5(6, 6, 1);
     point::point_t p6(6, 3, 1);
     triangle::triangle_t t2(p4, p5, p6);
+
     ASSERT_EQ(triangle::is_triangles_intersect(t1, t2), true);
 
     point::point_t p7(0, 4, 1);
@@ -601,6 +602,18 @@ TEST(Triangle_main, test_triangles_intersect10)
     triangle::triangle_t t2(p4, p5, p6);
 
     ASSERT_EQ(triangle::is_triangles_intersect(t1, t2), false);
+
+    point::point_t p7(0, 0, 0);
+    point::point_t p8(1, 0, 0);
+    point::point_t p9(0, 1, 0);
+    triangle::triangle_t t3(p7, p8, p9);
+
+    point::point_t p10(0, 0, 0);
+    point::point_t p11(0, 3, 3);
+    point::point_t p12(0, 0, 3);
+    triangle::triangle_t t4(p10, p11, p12);
+
+    ASSERT_EQ(triangle::is_triangles_intersect(t3, t4), true);
 }
 
 TEST(Triangle_main, test_triangles_point)
@@ -639,6 +652,6 @@ TEST(Triangle_main, test_triangles_lines)
     point::point_t p6(3, 3,  0);
     triangle::triangle_t t2(p4, p5, p6);
 
-    ASSERT_EQ(t2.is_triangle_is_line(), true);
+    ASSERT_EQ(t2.is_triangle_is_segment(), true);
     ASSERT_EQ(triangle::is_triangles_intersect(t1, t2), true);
 }

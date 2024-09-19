@@ -101,12 +101,27 @@ namespace segment {
         }
 
         bool is_point_in(const point_t& p) const {
-            if (is_double_equal((y_ - x_).length(), (p - x_).length() + (p - y_).length()))
+            if (is_double_eq((y_ - x_).length(), (p - x_).length() + (p - y_).length()))
                 return true;
             
             return false;
         }
-    };
+    };        
+
+    bool is_points_segment(const point_t& a, const point_t& b, const point_t& c) {
+        if (!a.is_valid() ||
+            !b.is_valid() ||
+            !c.is_valid())
+            return false;
+
+        line_t ab(a, b - a);
+        line_t bc(b, c - b);
+        line_t ca(c, a - c);
+
+        return (is_lines_parallel(ab, bc) ||
+                is_lines_parallel(bc, ca) ||
+                is_lines_parallel(ab, ca));
+    }
 
     bool operator==(const segment_t& a, const segment_t& b) {
         return (a.get_x() == b.get_x() &&
