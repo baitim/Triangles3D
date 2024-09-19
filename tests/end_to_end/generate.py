@@ -5,7 +5,7 @@ for test_num in range(0, count_tests) :
     file_name = "tests_in/test_" + f'{test_num+1:03}' + ".in"
     file = open(file_name, 'w')
 
-    count_triangles = random.randint(1000, 2000)
+    count_triangles = random.randint(2000, 3000)
 
     min_x = -200
     max_x =  200
@@ -14,7 +14,7 @@ for test_num in range(0, count_tests) :
     min_z = -200
     max_z =  200
 
-    stepx  = 20
+    stepx  = 30
     shiftx = max(abs(min_x), abs(max_x)) - 1
     stepy  = 20
     shifty = max(abs(min_y), abs(max_y)) - 1

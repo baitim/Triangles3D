@@ -2,11 +2,16 @@
 
 #include <set>
 #include "plane.hpp"
+#include "pthread.h"
 
 namespace triangle {
     using namespace plane;
 
     double triangle_square(const point_t& a, const point_t& b, const point_t& c);
+
+    struct triangle_line_inter_coefs_t final {
+        coefs_t k_[3]{};
+    };
 
     class triangle_t final {
         point_t a_;
@@ -60,29 +65,24 @@ namespace triangle {
                     triag_plane.is_valid());
         }
 
-        coefs_t* get_line_intersect_edges(const line_t& line) const {
+        triangle_line_inter_coefs_t get_line_intersect_edges(const line_t& line) const {
             if (!line.is_valid() || !is_valid())
-                return new coefs_t[3]{false, NAN, NAN};
+                return triangle_line_inter_coefs_t{};
 
             segment_t segs[3] = {{a_, b_}, {b_, c_}, {c_, a_}};
-            coefs_t* coefs = new coefs_t[3]{false, NAN, NAN};
-
+            triangle_line_inter_coefs_t coefs;
             for (int i = 0; i < 3; ++i)
-                coefs[i] = segs[i].get_line_intersect(line);
+                coefs.k_[i] = segs[i].get_line_intersect(line);
 
             return coefs;
         }
 
         bool is_line_intersect_edges(const line_t& line) const {
-            coefs_t* coefs = get_line_intersect_edges(line);
-            for (int i = 0; i < 3; ++i) {
-                if (coefs[i].is_valid_) {
-                    delete [] coefs;
+            triangle_line_inter_coefs_t coefs = get_line_intersect_edges(line);
+            for (int i = 0; i < 3; ++i)
+                if (coefs.k_[i].is_valid_)
                     return true;
-                }
-            }
 
-            delete [] coefs;
             return false;
         }
 
@@ -181,21 +181,22 @@ namespace triangle {
         return false;
     }
 
-    bool is_segments_coefs_intersect(coefs_t* coefs_a, coefs_t* coefs_b) {
+    bool is_segments_coefs_intersect(triangle_line_inter_coefs_t coefs_a,
+                                     triangle_line_inter_coefs_t coefs_b) {
         coefs_t coefs_a1(false), coefs_a2(false), coefs_b1(false), coefs_b2(false);
         for (int i = 0; i < 3; ++i) {
-            if (coefs_a[i].is_valid_) {
+            if (coefs_a.k_[i].is_valid_) {
                 if (!coefs_a1.is_valid_)
-                    coefs_a1 = coefs_a[i];
+                    coefs_a1 = coefs_a.k_[i];
                 else    
-                    coefs_a2 = coefs_a[i];
+                    coefs_a2 = coefs_a.k_[i];
             }
 
-            if (coefs_b[i].is_valid_) {
+            if (coefs_b.k_[i].is_valid_) {
                 if (!coefs_b1.is_valid_)
-                    coefs_b1 = coefs_b[i];
+                    coefs_b1 = coefs_b.k_[i];
                 else    
-                    coefs_b2 = coefs_b[i];
+                    coefs_b2 = coefs_b.k_[i];
             }
         }
 
@@ -268,30 +269,84 @@ namespace triangle {
             return is_intersect_simple_figure(a, b);
 
 
-        coefs_t* coefs_a = a.get_line_intersect_edges(line_inter);
-        coefs_t* coefs_b = b.get_line_intersect_edges(line_inter);
-
-        bool is_coefs_intersection = is_segments_coefs_intersect(coefs_a, coefs_b);
-        delete [] coefs_a;
-        delete [] coefs_b;
-
-        if(is_coefs_intersection)
+        triangle_line_inter_coefs_t coefs_a = a.get_line_intersect_edges(line_inter);
+        triangle_line_inter_coefs_t coefs_b = b.get_line_intersect_edges(line_inter);
+        if(is_segments_coefs_intersect(coefs_a, coefs_b))
             return true;
 
         return false;
     }
 
-    std::set<int> get_set_triangles_in_intersections(int count, const triangle_t* b) {
-        std::set<int> ans;
-        for (int i = 0; i < count; ++i) {
-            for (int j = i + 1; j < count; ++j) {
-                if (is_triangles_intersect(b[i], b[j])) {
-                    ans.insert(i);
-                    ans.insert(j);
+    struct block_calc_info_t final {
+        int count_part;
+        int count;
+        int shift;
+        const triangle_t* triangles;
+        std::set<int>* answer;
+    };
+
+    void* get_set_triangles_in_intersections_thread(void* block_calc_info_) {
+        block_calc_info_t* block_calc_info = (block_calc_info_t*)block_calc_info_;
+        const triangle_t* triangles        = block_calc_info->triangles;
+
+        std::set<int>* answer = block_calc_info->answer;
+        int count_part        = block_calc_info->count_part;
+        int count             = block_calc_info->count;
+        int shift             = block_calc_info->shift;
+
+        for (int i = 0; i < count_part; ++i) {
+            int i_shift = i + shift;
+
+            for (int j = 0; j < count; ++j) {
+                if (i_shift == j)
+                    continue;
+
+                if (is_triangles_intersect(triangles[i_shift], triangles[j])) {
+                    answer->insert(i_shift);
+                    answer->insert(j);
                 }
             }
         }
-        return ans;
+
+        return NULL;
+    }
+
+    std::set<int> get_set_triangles_in_intersections(int count, const triangle_t* triangles) {
+        std::set<int> answer;
+
+        const int calc_threads = 10;
+        pthread_t pool[calc_threads];
+
+        int count_triangles_in_thread[calc_threads];
+        int count_to_thread = count / calc_threads;
+        for (int i = 0; i < calc_threads; i++)
+            count_triangles_in_thread[i] = count_to_thread;
+
+        int count_in_last_thread = count - (count_to_thread * (calc_threads - 1));
+        count_triangles_in_thread[calc_threads - 1] = count_in_last_thread;
+
+        block_calc_info_t block_calc_info[calc_threads] = {};
+        std::set<int> answers[calc_threads];
+        for (int num_thread = 0; num_thread < calc_threads; num_thread++) {
+            block_calc_info[num_thread] = (block_calc_info_t)
+                                          {count_triangles_in_thread[num_thread],
+                                           count,
+                                           num_thread * count_to_thread,
+                                           triangles,
+                                           &answers[num_thread]};
+
+            pthread_create(&pool[num_thread], NULL, get_set_triangles_in_intersections_thread,
+                           (void*)&block_calc_info[num_thread]);
+        }
+
+        for (int num_thread = 0; num_thread < calc_threads; num_thread++) {
+            pthread_join(pool[num_thread], NULL);
+
+            std::set<int> ans = *block_calc_info[num_thread].answer;
+            answer.insert(ans.begin(), ans.end());
+        }
+
+        return answer;
     }
 
     double triangle_square(const point_t& a, const point_t& b, const point_t& c) {
