@@ -157,20 +157,20 @@ namespace triangle {
         }
     };
 
-        bool is_line_intersect_triangle(const triangle_t& a, const line_t& line) {
-            if (a.get_plane().norm().normal() == line.get_v().norm()) {
-                if (a.get_plane().is_point_in(line.get_x()))
-                    return true;
-                else
-                    return false;
-            }
-
-            point_t p = a.get_plane().get_intersect_line(line);
-            if (a.is_point_in(p))
+    bool is_line_intersect_triangle(const triangle_t& a, const line_t& line) {
+        if (a.get_plane().norm().normal() == line.get_v().norm()) {
+            if (a.get_plane().is_point_in(line.get_x()))
                 return true;
-
-            return false;
+            else
+                return false;
         }
+
+        point_t p = a.get_plane().get_intersect_line(line);
+        if (a.is_point_in(p))
+            return true;
+
+        return false;
+    }
 
     bool is_triangles_intersect_in_plane(const triangle_t& a, const triangle_t& b) {
         if (a.is_triangle_vertexes_inside(b) ||
