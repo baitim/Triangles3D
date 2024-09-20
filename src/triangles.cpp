@@ -13,7 +13,7 @@ int main() {
 
     std::set<int> ans = get_set_triangles_in_intersections(count, triangles);
     for (auto it : ans)
-        std::cout << it + 1 << "\n";
+        std::cout << it << "\n";
 
     delete [] triangles;
     return 0;

@@ -691,6 +691,25 @@ TEST(Triangle_main, test_triangles_intersect11)
     triangle::triangle_t t2(p4, p5, p6);
 
     ASSERT_EQ(triangle::is_triangles_intersect(t1, t2), false);
+
+    point::point_t p7(1, 0, 0);
+    point::point_t p8(0, 1, 0);
+    point::point_t p9(0, 0, 1);
+    triangle::triangle_t t3(p7, p8, p9);
+
+    point::point_t p10(0, 0, 0);
+    point::point_t p11(5, 5, 0);
+    point::point_t p12(5, 5, 10);
+    triangle::triangle_t t4(p10, p11, p12);
+
+    point::point_t p13(0.5, 0, 0);
+    point::point_t p14(0,   0, 0);
+    point::point_t p15(0,   0, 0.5);
+    triangle::triangle_t t5(p13, p14, p15);
+
+    ASSERT_EQ(triangle::is_triangles_intersect(t3, t5), false);
+    ASSERT_EQ(triangle::is_triangles_intersect(t3, t4), true);
+    ASSERT_EQ(triangle::is_triangles_intersect(t4, t5), true);
 }
 
 TEST(Triangle_main, test_triangles_point)
