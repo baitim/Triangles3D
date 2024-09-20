@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+#include <cstring>
 #include <set>
 #include "plane.hpp"
 #include "pthread.h"
@@ -247,6 +249,15 @@ namespace triangle {
                 a.get_c() == b.get_c());
     }
 
+    bool operator<(const triangle_t& a, const triangle_t& b) {
+
+        if (std::max(a.get_a(), std::max(a.get_b(), a.get_c())) <
+            std::min(b.get_a(), std::min(b.get_b(), b.get_c())))
+            return true;
+
+        return false;
+    }
+
     bool is_triangles_intersect(const triangle_t& a, const triangle_t& b) {
         if (a == b)
             return true;
@@ -277,76 +288,31 @@ namespace triangle {
         return false;
     }
 
-    struct block_calc_info_t final {
-        int count_part;
-        int count;
-        int shift;
-        const triangle_t* triangles;
-        std::set<int>* answer;
-    };
+    std::set<int> get_set_triangles_in_intersections(int count, const triangle_t* triangles) {
+        std::pair<triangle_t, int>* tmp = new std::pair<triangle_t, int>[count];
+        for (int i = 0; i < count; ++i)
+            tmp[i] = std::make_pair(triangles[i], i);
 
-    void* get_set_triangles_in_intersections_thread(void* block_calc_info_) {
-        block_calc_info_t* block_calc_info = (block_calc_info_t*)block_calc_info_;
-        const triangle_t* triangles        = block_calc_info->triangles;
+        std::sort(tmp, tmp + count);
 
-        std::set<int>* answer = block_calc_info->answer;
-        int count_part        = block_calc_info->count_part;
-        int count             = block_calc_info->count;
-        int shift             = block_calc_info->shift;
+        std::set<int> ans;
+        for (int i = 0; i < count; ++i) {
+            if (ans.find(i) != ans.end())
+                continue;
 
-        for (int i = 0; i < count_part; ++i) {
-            int i_shift = i + shift;
-
-            for (int j = 0; j < count; ++j) {
-                if (i_shift == j)
-                    continue;
-
-                if (is_triangles_intersect(triangles[i_shift], triangles[j])) {
-                    answer->insert(i_shift);
-                    answer->insert(j);
+            for (int j = i + 1; j < count; ++j) {
+                if (is_triangles_intersect(tmp[i].first, tmp[j].first)) {
+                    ans.insert(tmp[i].second);
+                    ans.insert(tmp[j].second);
+                } else {
+                    if (tmp[i] < tmp[j])
+                        break;
                 }
             }
         }
 
-        return NULL;
-    }
-
-    std::set<int> get_set_triangles_in_intersections(int count, const triangle_t* triangles) {
-        std::set<int> answer;
-
-        const int calc_threads = 10;
-        pthread_t pool[calc_threads];
-
-        int count_triangles_in_thread[calc_threads];
-        int count_to_thread = count / calc_threads;
-        for (int i = 0; i < calc_threads; i++)
-            count_triangles_in_thread[i] = count_to_thread;
-
-        int count_in_last_thread = count - (count_to_thread * (calc_threads - 1));
-        count_triangles_in_thread[calc_threads - 1] = count_in_last_thread;
-
-        block_calc_info_t block_calc_info[calc_threads] = {};
-        std::set<int> answers[calc_threads];
-        for (int num_thread = 0; num_thread < calc_threads; num_thread++) {
-            block_calc_info[num_thread] = (block_calc_info_t)
-                                          {count_triangles_in_thread[num_thread],
-                                           count,
-                                           num_thread * count_to_thread,
-                                           triangles,
-                                           &answers[num_thread]};
-
-            pthread_create(&pool[num_thread], NULL, get_set_triangles_in_intersections_thread,
-                           (void*)&block_calc_info[num_thread]);
-        }
-
-        for (int num_thread = 0; num_thread < calc_threads; num_thread++) {
-            pthread_join(pool[num_thread], NULL);
-
-            std::set<int> ans = *block_calc_info[num_thread].answer;
-            answer.insert(ans.begin(), ans.end());
-        }
-
-        return answer;
+        delete [] tmp;
+        return ans;
     }
 
     double triangle_square(const point_t& a, const point_t& b, const point_t& c) {

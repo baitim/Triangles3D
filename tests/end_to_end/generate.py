@@ -14,7 +14,7 @@ for test_num in range(0, count_tests) :
     min_z = -200
     max_z =  200
 
-    stepx  = 30
+    stepx  = 20
     shiftx = max(abs(min_x), abs(max_x)) - 1
     stepy  = 20
     shifty = max(abs(min_y), abs(max_y)) - 1
@@ -30,11 +30,11 @@ for test_num in range(0, count_tests) :
         cur_shifty = random.randint(-stepy, stepy) * shifty
         cur_shiftz = random.randint(-stepz, stepz) * shiftz
         for k in range(3) :
-            point_x = random.uniform(min_x, max_x) + cur_shiftx
-            point_y = random.uniform(min_y, max_y) + cur_shifty
-            point_z = random.uniform(min_z, max_z) + cur_shiftz
+            point_x = round(random.uniform(min_x, max_x), 2) + cur_shiftx
+            point_y = round(random.uniform(min_y, max_y), 2) + cur_shifty
+            point_z = round(random.uniform(min_z, max_z), 2) + cur_shiftz
 
-            test_str += f'{point_x:<20}' + " " + f'{point_y:<20}' + " " + f'{point_z:<20}' + "\n"
+            test_str += f'{point_x:<12}' + " " + f'{point_y:<12}' + " " + f'{point_z:<12}' + "\n"
 
         test_str += "\n"
         file.write(test_str)
