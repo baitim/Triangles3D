@@ -14,11 +14,13 @@ for test_num in range(0, count_tests) :
     min_z = -200
     max_z =  200
 
-    stepx  = 20
+    cub_sqrt_count_triangles = (int)(count_triangles ** (1/3))
+    stepx  = cub_sqrt_count_triangles
+    stepy  = cub_sqrt_count_triangles
+    stepz  = cub_sqrt_count_triangles
+    
     shiftx = max(abs(min_x), abs(max_x)) - 1
-    stepy  = 20
     shifty = max(abs(min_y), abs(max_y)) - 1
-    stepz  = 10
     shiftz = max(abs(min_z), abs(max_z)) - 1
 
     test_str = str(count_triangles) + "\n\n"
