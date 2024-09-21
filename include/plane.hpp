@@ -87,6 +87,10 @@ namespace plane {
             return point_t(A_, B_, C_);
         }
 
+        double check_point_dot_plane(const point_t& v) const {
+            return dot(normal(), v) + D_;
+        }
+
         bool is_valid() const {
             return (!std::isnan(A_) &&
                     !std::isnan(B_) &&

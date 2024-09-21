@@ -249,11 +249,28 @@ namespace triangle {
                 a.get_c() == b.get_c());
     }
 
+    bool is_on_one_side(const plane_t& pl, const triangle_t& t) {
+        if (is_double_gt(pl.check_point_dot_plane(t.get_a()), 0) &&
+            is_double_gt(pl.check_point_dot_plane(t.get_b()), 0) &&
+            is_double_gt(pl.check_point_dot_plane(t.get_c()), 0))
+            return true;
+
+        if (is_double_lt(pl.check_point_dot_plane(t.get_a()), 0) &&
+            is_double_lt(pl.check_point_dot_plane(t.get_b()), 0) &&
+            is_double_lt(pl.check_point_dot_plane(t.get_c()), 0))
+            return true;
+
+        return false;
+    }
+
     bool is_triangles_intersect(const triangle_t& a, const triangle_t& b) {
         if (a == b)
             return true;
 
         plane_t plane_a(a.get_a(), a.get_b(), a.get_c());
+        if (is_on_one_side(plane_a, b))
+            return false;
+
         plane_t plane_b(b.get_a(), b.get_b(), b.get_c());
 
         if (plane_a == plane_b &&

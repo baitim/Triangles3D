@@ -45,6 +45,10 @@ namespace point {
         }
     };
 
+    double dot(const point_t& a, const point_t& b) {
+        return (a.get_x() * b.get_x()) + (a.get_y() * b.get_y()) + (a.get_z() * b.get_z());
+    }
+
     point_t cross_product(const point_t& a, const point_t& b) {
         double new_a = a.get_y() * b.get_z() - a.get_z() * b.get_y();
         double new_b = a.get_z() * b.get_x() - a.get_x() * b.get_z();
