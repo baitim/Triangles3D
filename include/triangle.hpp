@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <vector>
 #include <set>
 #include "plane.hpp"
 #include "pthread.h"
@@ -185,29 +186,29 @@ namespace triangle {
 
     bool is_segments_coefs_intersect(const triangle_line_inter_coefs_t& coefs_a,
                                      const triangle_line_inter_coefs_t& coefs_b) {
-        coefs_t coefs_a1(false), coefs_a2(false), coefs_b1(false), coefs_b2(false);
-        for (int i = 0; i < 3; ++i) {
-            if (coefs_a.k_[i].is_valid_) {
-                if (!coefs_a1.is_valid_)
-                    coefs_a1 = coefs_a.k_[i];
-                else    
-                    coefs_a2 = coefs_a.k_[i];
-            }
 
-            if (coefs_b.k_[i].is_valid_) {
-                if (!coefs_b1.is_valid_)
-                    coefs_b1 = coefs_b.k_[i];
-                else    
-                    coefs_b2 = coefs_b.k_[i];
+        std::vector<segment_t> coefs_a_range;
+        std::vector<segment_t> coefs_b_range;
+
+        for (int i = 0; i < 3; ++i) {
+            for (int j = i + 1; j < 3; ++j) {
+                if (coefs_a.k_[i].is_valid_ && coefs_a.k_[j].is_valid_)
+                    coefs_a_range.push_back(segment_t{coefs_a.k_[i].k_, coefs_a.k_[j].k_});
+
+                if (coefs_b.k_[i].is_valid_ && coefs_b.k_[j].is_valid_)
+                    coefs_b_range.push_back(segment_t{coefs_b.k_[i].k_, coefs_b.k_[j].k_});
             }
         }
 
-        segment_t coefs_a_range{coefs_a1.k_, coefs_a2.k_};
-        segment_t coefs_b_range{coefs_b1.k_, coefs_b2.k_};
-
-        if (coefs_a_range.is_point_in(coefs_b1.k_) || coefs_a_range.is_point_in(coefs_b2.k_) ||
-            coefs_b_range.is_point_in(coefs_a1.k_) || coefs_b_range.is_point_in(coefs_a2.k_))
-            return true;
+        for (int i = 0, end1 = coefs_a_range.size(); i < end1; ++i) {
+            for (int j = 0, end2 = coefs_b_range.size(); j < end2; ++j) {
+                if (coefs_a_range[i].is_point_in(coefs_b_range[j].get_x()) ||
+                    coefs_a_range[i].is_point_in(coefs_b_range[j].get_y()) ||
+                    coefs_b_range[j].is_point_in(coefs_a_range[i].get_x()) ||
+                    coefs_b_range[j].is_point_in(coefs_a_range[i].get_y()))
+                    return true;
+            }
+        }
         
         return false;
     }
@@ -338,7 +339,7 @@ namespace triangle {
 
         int count_triangles_in_thread[calc_threads];
         int count_to_thread = count / calc_threads;
-        for (int i = 0; i < calc_threads; i++)
+        for (int i = 0; i < calc_threads; ++i)
             count_triangles_in_thread[i] = count_to_thread;
 
         int count_in_last_thread = count - (count_to_thread * (calc_threads - 1));
@@ -346,7 +347,7 @@ namespace triangle {
 
         block_calc_info_t block_calc_info[calc_threads] = {};
         std::set<int> answers[calc_threads];
-        for (int num_thread = 0; num_thread < calc_threads; num_thread++) {
+        for (int num_thread = 0; num_thread < calc_threads; ++num_thread) {
             block_calc_info[num_thread] = (block_calc_info_t)
                                           {count_triangles_in_thread[num_thread],
                                            count,
@@ -358,7 +359,7 @@ namespace triangle {
                            (void*)&block_calc_info[num_thread]);
         }
 
-        for (int num_thread = 0; num_thread < calc_threads; num_thread++) {
+        for (int num_thread = 0; num_thread < calc_threads; ++num_thread) {
             pthread_join(pool[num_thread], NULL);
 
             std::set<int> ans = *block_calc_info[num_thread].answer;

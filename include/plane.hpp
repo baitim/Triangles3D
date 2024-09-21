@@ -17,16 +17,11 @@ namespace plane {
                 *this = plane_t();
                 return;
             }
- 
-            float a1 = b.get_x() - a.get_x();
-            float b1 = b.get_y() - a.get_y();
-            float c1 = b.get_z() - a.get_z();
-            float a2 = c.get_x() - a.get_x();
-            float b2 = c.get_y() - a.get_y();
-            float c2 = c.get_z() - a.get_z();
-            A_ = b1 * c2 - b2 * c1;
-            B_ = a2 * c1 - a1 * c2;
-            C_ = a1 * b2 - b1 * a2;
+
+            point_t normal = cross_product(b - a, c - a);
+            A_ = normal.get_x();
+            B_ = normal.get_y();
+            C_ = normal.get_z();
             D_ = (- A_ * a.get_x() - B_ * a.get_y() - C_ * a.get_z());
         }
         
@@ -141,14 +136,21 @@ namespace plane {
         point_t line_v = cross_product(a.normal(), b.normal()).norm();
         double x = 0, y = 0, z = 0;
 
+        if (is_double_ne(a.get_A(), 0)) x = - a.get_D() / a.get_A();
+        if (is_double_ne(b.get_A(), 0)) x = - b.get_D() / b.get_A();
+
         double coef = a.get_B() * b.get_C() - a.get_C() * b.get_B();
-        if (is_double_ne(coef, 0))
-            y = (a.get_C() * b.get_D() - b.get_C() * a.get_D()) / coef;
+        if (is_double_ne(coef, 0)) {
+            y = (a.get_C() * (b.get_D() + b.get_A() * x)) -
+                (b.get_C() * (a.get_D() + a.get_A() * x));
+
+            y /= coef;
+        }
 
         if (is_double_ne(a.get_C(), 0))
-            z = -(a.get_D() + a.get_B() * y) / a.get_C();
+            z = -(a.get_D() + a.get_A() * x + a.get_B() * y) / a.get_C();
         else if (is_double_ne(b.get_C(), 0))
-            z = -(b.get_D() + b.get_B() * y) / b.get_C();
+            z = -(b.get_D() + a.get_A() * x + b.get_B() * y) / b.get_C();
 
         point_t line_point(x, y, z);
         return line_t(line_point, line_v);
