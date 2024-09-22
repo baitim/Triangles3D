@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-#include "ANSI_colors.hpp"
 #include "point.hpp"
 
 namespace line {
@@ -36,8 +34,11 @@ namespace line {
         if (!a.is_valid() || !b.is_valid())
             return false;
 
-        return (a.get_v().norm() ==  b.get_v().norm() ||
-                a.get_v().norm() == -b.get_v().norm());
+        point_t av_norm = a.get_v().norm();
+        point_t bv_norm = b.get_v().norm();
+
+        return (av_norm ==  bv_norm ||
+                av_norm == -bv_norm);
     }
 
     bool operator==(const line_t& a, const line_t& b) {

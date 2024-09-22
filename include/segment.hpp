@@ -67,12 +67,15 @@ namespace segment {
             point_t dP    = x_ - line.get_x();
             point_t dPxV2 = cross_product(dP, seg_line.get_v());
 
-            if (V1xV2.norm()   ==  dPxV2.norm() ||
-                V1xV2.norm()   == -dPxV2.norm() ||
+            point_t V1xV2_norm = V1xV2.norm();
+            point_t dPxV2_norm = dPxV2.norm();
+
+            if (V1xV2_norm   ==  dPxV2_norm ||
+                V1xV2_norm   == -dPxV2_norm ||
                 dPxV2.length() == 0) {
 
                 double k = dPxV2.length() / V1xV2.length();
-                if (V1xV2.norm() == -dPxV2.norm())
+                if (V1xV2_norm == -dPxV2_norm)
                     k *= -1;
 
                 if (!is_point_in(line.get_x() + line.get_v() * k))
