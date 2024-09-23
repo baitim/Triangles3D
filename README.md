@@ -33,7 +33,7 @@
         maybe you will need these flags for the ctest <code>--rerun-failed --output-on-failure</code>
 
 ## Features
-* Optimized by C library <code>pthread.h</code>
+* Optimized by octree
 
 <p align="center"><img src="https://github.com/baitim/Triangles3D/blob/main/images/cat.gif" width="40%"></p>
 
