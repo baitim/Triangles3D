@@ -155,7 +155,7 @@ namespace octree {
             delete cube;
         }
 
-        std::set<int> get_intersecting_triangles_in_cube(std::set<int>& ans, const cube_t* cube) const {
+        void get_intersecting_triangles_in_cube(std::set<int>& ans, const cube_t* cube) const {
             for (int i = 0; i < 8; ++i)
                 if (cube->valid_childs[i])
                     get_intersecting_triangles_in_cube(ans, cube->childs[i]);
@@ -174,7 +174,6 @@ namespace octree {
                     }
                 }
             }
-            return ans;
         }
 
     public:
@@ -190,7 +189,8 @@ namespace octree {
 
         std::set<int> get_set_intersecting_triangles() const {
             std::set<int> ans;
-            return get_intersecting_triangles_in_cube(ans, root_);
+            get_intersecting_triangles_in_cube(ans, root_);
+            return ans;
         }
 
         ~octree_t() {
