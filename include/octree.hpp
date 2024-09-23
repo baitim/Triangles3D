@@ -190,8 +190,7 @@ namespace octree {
 
         std::set<int> get_set_intersecting_triangles() const {
             std::set<int> ans;
-            ans = get_intersecting_triangles_in_cube(ans, root_);
-            return ans;
+            return get_intersecting_triangles_in_cube(ans, root_);
         }
 
         ~octree_t() {
