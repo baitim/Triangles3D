@@ -49,16 +49,21 @@ namespace triangle {
         }
 
         bool is_point_in(const point_t& p) const {
-
             double S  = triangle_square(a_, b_, c_);
+
             double S1 = triangle_square(p,  a_, b_);
+            if (is_double_gt(S1, S))
+                return false;
+
             double S2 = triangle_square(p,  a_, c_);
+            if (is_double_gt(S2, S))
+                return false;
+
             double S3 = triangle_square(p,  b_, c_);
+            if (is_double_gt(S3, S))
+                return false;
             
-            if (is_double_eq(S1 + S2 + S3, S) &&
-                is_double_le(S1, S) &&
-                is_double_le(S2, S) &&
-                is_double_le(S3, S))
+            if (is_double_eq(S1 + S2 + S3, S))
                 return true;
 
             return false;
@@ -146,10 +151,6 @@ namespace triangle {
         segment_t triangle_to_segment() const {
             if (!is_triangle_is_segment())
                 return segment_t();
-
-            line_t ab(a_, b_ - a_);
-            line_t bc(b_, c_ - b_);
-            line_t ca(c_, a_ - c_);
 
             return segment_t(std::min(a_, std::min(b_, c_)),
                              std::max(a_, std::max(b_, c_)));
@@ -249,14 +250,18 @@ namespace triangle {
     }
 
     bool is_on_one_side(const plane_t& pl, const triangle_t& t) {
-        if (is_double_gt(pl.check_point_dot_plane(t.get_a()), 0) &&
-            is_double_gt(pl.check_point_dot_plane(t.get_b()), 0) &&
-            is_double_gt(pl.check_point_dot_plane(t.get_c()), 0))
+        double pl_norm_dot_a = pl.check_point_dot_plane(t.get_a());
+        double pl_norm_dot_b = pl.check_point_dot_plane(t.get_b());
+        double pl_norm_dot_c = pl.check_point_dot_plane(t.get_c());
+
+        if (is_double_gt(pl_norm_dot_a, 0) &&
+            is_double_gt(pl_norm_dot_b, 0) &&
+            is_double_gt(pl_norm_dot_c, 0))
             return true;
 
-        if (is_double_lt(pl.check_point_dot_plane(t.get_a()), 0) &&
-            is_double_lt(pl.check_point_dot_plane(t.get_b()), 0) &&
-            is_double_lt(pl.check_point_dot_plane(t.get_c()), 0))
+        if (is_double_lt(pl_norm_dot_a, 0) &&
+            is_double_lt(pl_norm_dot_b, 0) &&
+            is_double_lt(pl_norm_dot_c, 0))
             return true;
 
         return false;

@@ -122,16 +122,16 @@ namespace segment {
     bool is_points_segment(const point_t& a, const point_t& b, const point_t& c) {
         if (!a.is_valid() ||
             !b.is_valid() ||
-            !c.is_valid())
+            !c.is_valid() ||
+            (a == b && b == c))
             return false;
 
         line_t ab(a, b - a);
         line_t bc(b, c - b);
-        line_t ca(c, a - c);
 
         return (is_lines_parallel(ab, bc) ||
-                is_lines_parallel(bc, ca) ||
-                is_lines_parallel(ab, ca));
+                a == b ||
+                b == c);
     }
 
     bool operator==(const segment_t& a, const segment_t& b) {
