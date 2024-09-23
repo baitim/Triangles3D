@@ -31,9 +31,6 @@ namespace line {
     };
 
     bool is_lines_parallel(const line_t& a, const line_t& b) {
-        if (!a.is_valid() || !b.is_valid())
-            return false;
-
         point_t av_norm = a.get_v().norm();
         point_t bv_norm = b.get_v().norm();
 

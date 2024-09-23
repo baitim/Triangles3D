@@ -135,12 +135,14 @@ namespace octree {
                     cube->valid_childs[i] = 1;
                 }
             }
-
-            for (int j = count_inside - 1; j >= 0; --j) {
+            
+            int shift = 0;
+            auto triangles_iter = cube->triangles_.begin();
+            for (int j = 0; j < count_inside; ++j) {
                 if (in_childs[j]) {
-                    auto triangles_iter = cube->triangles_.begin();
-                    std::advance(triangles_iter, j);
-                    cube->triangles_.erase(triangles_iter);
+                    std::advance(triangles_iter, j - shift);
+                    triangles_iter = cube->triangles_.erase(triangles_iter);
+                    shift = j + 1;
                 }
             }
 
