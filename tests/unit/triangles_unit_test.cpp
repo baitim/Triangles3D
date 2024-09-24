@@ -1017,3 +1017,59 @@ TEST(Octree_main, test_octree_intersect5_points)
     ASSERT_EQ(ans.find(0) != ans.end(), true);
     ASSERT_EQ(ans.find(1) != ans.end(), true);
 }
+
+TEST(Octree_main, test_octree_intersect5_points_lines1)
+{
+    point::point_t p1(0, 0, 0);
+    point::point_t p2(1, 1, 1);
+    triangle::triangle_t t1(p1, p1, p2);
+
+    point::point_t p3(2,   2,   2);
+    point::point_t p4(2.5, 2.5, 2.5);
+    triangle::triangle_t t2(p3, p4, p4);
+
+    point::point_t p5(1.5, 1.5, 1.5);
+    triangle::triangle_t t3(p5, p5, p5);
+
+    point::point_t p6(3, 3, 3);
+    triangle::triangle_t t4(p6, p6, p6);
+
+    const int count = 4;
+    triangle::triangle_t triangles[count] = {t1, t2, t3, t4};
+
+    octree::octree_t octree(count, triangles);
+    std::set<int> ans = octree.get_set_intersecting_triangles();
+    
+    ASSERT_EQ(ans.find(0) != ans.end(), false);
+    ASSERT_EQ(ans.find(1) != ans.end(), false);
+    ASSERT_EQ(ans.find(2) != ans.end(), false);
+    ASSERT_EQ(ans.find(3) != ans.end(), false);
+}
+
+TEST(Octree_main, test_octree_intersect5_points_lines2)
+{
+    point::point_t p1(0, 0, 0);
+    point::point_t p2(1, 1, 1);
+    triangle::triangle_t t1(p1, p1, p2);
+
+    point::point_t p3(2,   2,   2);
+    point::point_t p4(2.5, 2.5, 2.5);
+    triangle::triangle_t t2(p3, p4, p4);
+
+    point::point_t p5(1, 1, 1);
+    triangle::triangle_t t3(p5, p5, p5);
+
+    point::point_t p6(2.25, 2.25, 2.25);
+    triangle::triangle_t t4(p6, p6, p6);
+
+    const int count = 4;
+    triangle::triangle_t triangles[count] = {t1, t2, t3, t4};
+
+    octree::octree_t octree(count, triangles);
+    std::set<int> ans = octree.get_set_intersecting_triangles();
+    
+    ASSERT_EQ(ans.find(0) != ans.end(), true);
+    ASSERT_EQ(ans.find(1) != ans.end(), true);
+    ASSERT_EQ(ans.find(2) != ans.end(), true);
+    ASSERT_EQ(ans.find(3) != ans.end(), true);
+}
