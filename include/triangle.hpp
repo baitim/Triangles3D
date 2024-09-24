@@ -216,6 +216,9 @@ namespace triangle {
         segment_t segment_a = a.triangle_to_segment();
         segment_t segment_b = b.triangle_to_segment();
 
+        if (a.is_triangle_is_point() && b.is_triangle_is_point())   
+            return (a.get_a() == b.get_b());
+
         if (a.is_triangle_is_point()) {
             if (b.is_triangle_is_segment())
                 return segment_b.is_point_in(a.get_a());
