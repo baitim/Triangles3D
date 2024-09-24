@@ -44,7 +44,8 @@ namespace line {
 
         line_t dx(a.get_x(), b.get_x() - a.get_x());
         return (is_lines_parallel(a, b) &&
-                is_lines_parallel(a, dx));
+                (is_lines_parallel(a, dx) ||
+                 (b.get_x() == a.get_x())));
     }
 
     bool is_lines_intersect(const line_t& a, const line_t& b) {

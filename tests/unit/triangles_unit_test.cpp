@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "triangle.hpp"
+#include "octree.hpp"
 
 TEST(Point_main, test_point_opers)
 {
@@ -776,6 +776,30 @@ TEST(Triangle_main, test_triangles_intersect13)
     ASSERT_EQ(triangle::is_triangles_intersect(t1, t3), true);
 }
 
+TEST(Triangle_main, test_triangles_intersect14)
+{
+    point::point_t p1(0, 0, 0);
+    point::point_t p2(1, 0, 0);
+    point::point_t p3(0, 1, 0);
+    triangle::triangle_t t1(p1, p2, p3);
+
+    point::point_t p4(5, 5, 5);
+    point::point_t p5(5, 5, 5);
+    point::point_t p6(5, 5, 5);
+    triangle::triangle_t t2(p4, p5, p6);
+
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t2), false);
+
+    point::point_t p7(0,  0.5, -0.5);
+    point::point_t p8(0,  0.5,  0.5);
+    point::point_t p9(-1, 0,    0);
+    triangle::triangle_t t3(p7, p8, p9);
+
+    ASSERT_EQ(triangle::is_triangles_intersect(t2, t3), false);
+    ASSERT_EQ(triangle::is_triangles_intersect(t1, t3), true);
+    ASSERT_EQ(triangle::is_triangles_intersect(t3, t1), true);
+}
+
 TEST(Triangle_main, test_triangles_point)
 {
     point::point_t p1(6, 0, 1);
@@ -828,4 +852,31 @@ TEST(Triangle_main, test_triangles_lines)
     ASSERT_EQ(t3.is_triangle_is_segment(), true);
     ASSERT_EQ(t4.is_triangle_is_segment(), true);
     ASSERT_EQ(triangle::is_triangles_intersect(t3, t4), true);
+}
+
+TEST(Octree_main, test_octree_intersect1)
+{
+    point::point_t p1(0, 0, 0);
+    point::point_t p2(1, 0, 0);
+    point::point_t p3(0, 1, 0);
+    triangle::triangle_t t1(p1, p2, p3);
+
+    point::point_t p4(5, 5, 5);
+    point::point_t p5(5, 5, 5);
+    point::point_t p6(5, 5, 5);
+    triangle::triangle_t t2(p4, p5, p6);
+
+    point::point_t p7(0,  0.5, -0.5);
+    point::point_t p8(0,  0.5,  0.5);
+    point::point_t p9(-1, 0,    0);
+    triangle::triangle_t t3(p7, p8, p9);
+
+    triangle::triangle_t triangles[3] = {t1, t2, t3};
+    int count = 3;
+
+    octree::octree_t octree(count, triangles);
+    std::set<int> ans = octree.get_set_intersecting_triangles();
+    
+    ASSERT_EQ(ans.find(0) != ans.end(), true);
+    ASSERT_EQ(ans.find(2) != ans.end(), true);
 }

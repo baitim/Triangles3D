@@ -150,7 +150,7 @@ namespace plane {
         if (is_double_ne(a.get_C(), 0))
             z = -(a.get_D() + a.get_A() * x + a.get_B() * y) / a.get_C();
         else if (is_double_ne(b.get_C(), 0))
-            z = -(b.get_D() + a.get_A() * x + b.get_B() * y) / b.get_C();
+            z = -(b.get_D() + b.get_A() * x + b.get_B() * y) / b.get_C();
 
         point_t line_point(x, y, z);
         return line_t(line_point, line_v);
