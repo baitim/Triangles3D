@@ -117,7 +117,7 @@ namespace octree {
                 i++;
             }
 
-            if (count_inside == 1)
+            if (count_inside == count)
                 return count_inside;
 
             if (count_inside == 0) {

@@ -856,6 +856,7 @@ TEST(Triangle_main, test_triangles_point)
 
     ASSERT_EQ(t3.is_triangle_is_point(), true);
     ASSERT_EQ(triangle::is_triangles_intersect(t1, t3), false);
+    ASSERT_EQ(triangle::is_triangles_intersect(t3, t3), true);
 }
 
 TEST(Triangle_main, test_triangles_lines)
@@ -969,4 +970,21 @@ TEST(Octree_main, test_octree_intersect3)
     ASSERT_EQ(ans.find(0) != ans.end(), true);
     ASSERT_EQ(ans.find(1) != ans.end(), false);
     ASSERT_EQ(ans.find(2) != ans.end(), true);
+}
+
+TEST(Octree_main, test_octree_intersect4)
+{
+    point::point_t p1(0, 0, 0);
+    point::point_t p3(0, 0, 0);
+    point::point_t p2(0, 0, 0);
+    triangle::triangle_t t1(p1, p2, p3);
+
+    const int count = 2;
+    triangle::triangle_t triangles[count] = {t1, t1};
+
+    octree::octree_t octree(count, triangles);
+    std::set<int> ans = octree.get_set_intersecting_triangles();
+    
+    ASSERT_EQ(ans.find(0) != ans.end(), true);
+    ASSERT_EQ(ans.find(1) != ans.end(), true);
 }
