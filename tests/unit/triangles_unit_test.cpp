@@ -1,5 +1,39 @@
 #include <gtest/gtest.h>
+#include <glob.h>
+#include <vector>
+#include <fstream>
 #include "octree.hpp"
+
+TEST(Octree_end_to_end, end_to_end) 
+{
+    glob_t ans_new_files;
+    glob("../../../tests/end_to_end/answers_new/answer_*.ans", GLOB_ERR, NULL, &ans_new_files);
+
+    glob_t ans_old_files;
+    glob("../../../tests/end_to_end/answers_old/answer_*.ans", GLOB_ERR, NULL, &ans_old_files);
+
+    int count_tests = std::min(ans_new_files.gl_pathc, ans_old_files.gl_pathc);
+    for (int i = 0, index; i < count_tests; ++i) {
+        std::ifstream answer_new_file(ans_new_files.gl_pathv[i]);
+        std::vector<int> ans_new;
+        while (answer_new_file >> index)
+            ans_new.push_back(index);
+        answer_new_file.close();
+
+        std::ifstream answer_old_file(ans_old_files.gl_pathv[i]);
+        std::vector<int> ans_old;
+        while (answer_old_file >> index)
+            ans_old.push_back(index);
+        answer_old_file.close();
+
+        EXPECT_EQ(ans_new.size(), ans_old.size());
+        for (int j = 0, end = ans_new.size(); j < end; ++j)
+            EXPECT_EQ(ans_new[j], ans_old[j]);
+    }
+
+    globfree(&ans_new_files);
+    globfree(&ans_old_files);
+}
 
 TEST(Point_main, test_point_opers)
 {

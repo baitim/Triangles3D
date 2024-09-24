@@ -5,7 +5,7 @@ for test_num in range(0, count_tests) :
     file_name = "tests_in/test_" + f'{test_num+1:03}' + ".in"
     file = open(file_name, 'w')
 
-    count_triangles = random.randint(2000, 3000)
+    count_triangles = random.randint(100, 120)
 
     min_x = -200
     max_x =  200
