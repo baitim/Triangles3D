@@ -1,26 +1,36 @@
 #include <gtest/gtest.h>
 #include <glob.h>
 #include <vector>
+#include <string>
 #include <fstream>
 #include "octree.hpp"
 
+std::string int2str(int x, int size) {
+    std::string x_str = std::to_string(x);
+    int len = x_str.size();
+    while (len++ < size)
+        x_str = "0" + x_str;
+    return x_str;
+}
+
 TEST(Octree_end_to_end, end_to_end) 
 {
-    glob_t ans_new_files;
-    glob("../../../tests/end_to_end/answers_new/answer_*.ans", GLOB_ERR, NULL, &ans_new_files);
+    std::string path_to_test_dir = "../../../tests/end_to_end/";
+    std::string answers_old_str = path_to_test_dir + "answers_old/answer_";
+    std::string answers_new_str = path_to_test_dir + "answers_new/answer_";
+    std::string ans_str = ".ans";
 
-    glob_t ans_old_files;
-    glob("../../../tests/end_to_end/answers_old/answer_*.ans", GLOB_ERR, NULL, &ans_old_files);
+    const int count_tests = 10;
+    const int num_size    = 3;
 
-    int count_tests = std::min(ans_new_files.gl_pathc, ans_old_files.gl_pathc);
     for (int i = 0, index; i < count_tests; ++i) {
-        std::ifstream answer_new_file(ans_new_files.gl_pathv[i]);
+        std::ifstream answer_new_file(answers_new_str + int2str(i, num_size) + ans_str);
         std::vector<int> ans_new;
         while (answer_new_file >> index)
             ans_new.push_back(index);
         answer_new_file.close();
 
-        std::ifstream answer_old_file(ans_old_files.gl_pathv[i]);
+        std::ifstream answer_old_file(answers_old_str + int2str(i, num_size) + ans_str);
         std::vector<int> ans_old;
         while (answer_old_file >> index)
             ans_old.push_back(index);
@@ -30,9 +40,6 @@ TEST(Octree_end_to_end, end_to_end)
         for (int j = 0, end = ans_new.size(); j < end; ++j)
             EXPECT_EQ(ans_new[j], ans_old[j]);
     }
-
-    globfree(&ans_new_files);
-    globfree(&ans_old_files);
 }
 
 TEST(Point_main, test_point_opers)
