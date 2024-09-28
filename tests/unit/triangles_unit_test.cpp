@@ -101,8 +101,8 @@ TEST(Line_main, test_line_opers)
 
     line::line_t l2(p3, p4);
 
-    ASSERT_EQ(l1.get_v(), l2.get_v());
-    ASSERT_NE(l1.get_x(), l2.get_x());
+    ASSERT_EQ(l1.v_, l2.v_);
+    ASSERT_NE(l1.x_, l2.x_);
 
     point::point_t p5(3, 4, 5);
     line::line_t l3(p5, p2);
@@ -379,7 +379,7 @@ TEST(Plane_main, test_plane_intersection_exist)
     point::point_t ans(27784, 74880, 27368);
     ans = ans.norm();
 
-    ASSERT_EQ(plane::get_planes_intersection(pl1, pl2).get_v(), ans);
+    ASSERT_EQ(plane::get_planes_intersection(pl1, pl2).v_, ans);
 }
 
 TEST(Plane_main, test_plane_intersection_not_exist)
@@ -411,14 +411,14 @@ TEST(Triangle_main, test_triangle_opers)
     triangle::triangle_t t2(p1, p2, p3);
 
     ASSERT_EQ(t1, t2);
-    ASSERT_EQ(t1.get_plane(), t2.get_plane());
+    ASSERT_EQ(t1.triag_plane_, t2.triag_plane_);
 
     point::point_t p4(1,  4, -6);
     point::point_t p5(1, -2,  10);
     point::point_t p6(1, -3,  5);
     triangle::triangle_t t3(p4, p5, p6);
 
-    ASSERT_EQ(t1.get_plane(), t3.get_plane());
+    ASSERT_EQ(t1.triag_plane_, t3.triag_plane_);
 }
 
 TEST(Triangle_main, test_triangle_square)
@@ -453,7 +453,7 @@ TEST(Triangle_main, test_point_in_triangle)
     triangle::triangle_t t1(p1, p2, p3);
     plane::plane_t triang_plane{-101, 5, -110, 337};
 
-    ASSERT_EQ(t1.get_plane(), triang_plane);
+    ASSERT_EQ(t1.triag_plane_, triang_plane);
     ASSERT_EQ(t1.is_point_in(p1), true);
     ASSERT_EQ(t1.is_point_in(p2), true);
     ASSERT_EQ(t1.is_point_in(p3), true);

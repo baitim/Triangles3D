@@ -7,21 +7,12 @@
 namespace point {
     using namespace doubles;
 
-    class point_t final {
+    struct point_t final {
         double x_, y_, z_;
 
-    public:
         point_t() : x_(NAN), y_(NAN), z_(NAN) {}
         point_t(double val) : x_(val), y_(val), z_(val) {}
         point_t(double x, double y, double z) : x_(x), y_(y), z_(z) {}
-
-        double& set_x() { return x_; }
-        double& set_y() { return y_; }
-        double& set_z() { return z_; }
-
-        double get_x() const { return x_; }
-        double get_y() const { return y_; }
-        double get_z() const { return z_; }
 
         double length() const {
             return sqrt(x_ * x_ + y_ * y_ + z_ * z_);
@@ -46,44 +37,44 @@ namespace point {
     };
 
     double dot(const point_t& a, const point_t& b) {
-        return (a.get_x() * b.get_x()) + (a.get_y() * b.get_y()) + (a.get_z() * b.get_z());
+        return (a.x_ * b.x_) + (a.y_ * b.y_) + (a.z_ * b.z_);
     }
 
     point_t cross_product(const point_t& a, const point_t& b) {
-        double new_a = a.get_y() * b.get_z() - a.get_z() * b.get_y();
-        double new_b = a.get_z() * b.get_x() - a.get_x() * b.get_z();
-        double new_c = a.get_x() * b.get_y() - a.get_y() * b.get_x();
+        double new_a = a.y_ * b.z_ - a.z_ * b.y_;
+        double new_b = a.z_ * b.x_ - a.x_ * b.z_;
+        double new_c = a.x_ * b.y_ - a.y_ * b.x_;
 
         return point_t{new_a, new_b, new_c};
     }
 
 
     double triple_product(const point_t& a, const point_t& b, const point_t& c) {
-        double k1 = a.get_y() * b.get_z() - a.get_z() * b.get_y();
-        double k2 = a.get_z() * b.get_x() - a.get_x() * b.get_z();
-        double k3 = a.get_x() * b.get_y() - a.get_y() * b.get_x();
+        double k1 = a.y_ * b.z_ - a.z_ * b.y_;
+        double k2 = a.z_ * b.x_ - a.x_ * b.z_;
+        double k3 = a.x_ * b.y_ - a.y_ * b.x_;
 
-        return k1 * c.get_x() + k2 * c.get_y() + k3 * c.get_z();
+        return k1 * c.x_ + k2 * c.y_ + k3 * c.z_;
     }
 
     point_t operator-(const point_t& a) {
-        return point_t(-a.get_x(), -a.get_y(), -a.get_z());
+        return point_t(-a.x_, -a.y_, -a.z_);
     }
 
     point_t operator+(const point_t& a, const point_t& b) {
-        return point_t(a.get_x() + b.get_x(), a.get_y() + b.get_y(), a.get_z() + b.get_z());
+        return point_t(a.x_ + b.x_, a.y_ + b.y_, a.z_ + b.z_);
     }
 
     point_t operator-(const point_t& a, const point_t& b) {
-        return point_t(a.get_x() - b.get_x(), a.get_y() - b.get_y(), a.get_z() - b.get_z());
+        return point_t(a.x_ - b.x_, a.y_ - b.y_, a.z_ - b.z_);
     }
 
     point_t operator*(const point_t& a, const point_t& b) {
-        return point_t(a.get_x() * b.get_x(), a.get_y() * b.get_y(), a.get_z() * b.get_z());
+        return point_t(a.x_ * b.x_, a.y_ * b.y_, a.z_ * b.z_);
     }
 
     point_t operator/(const point_t& a, const point_t& b) {
-        return point_t(a.get_x() / b.get_x(), a.get_y() / b.get_y(), a.get_z() / b.get_z());
+        return point_t(a.x_ / b.x_, a.y_ / b.y_, a.z_ / b.z_);
     }
 
     const point_t& operator+=(point_t& a, const point_t& b) {
@@ -95,9 +86,9 @@ namespace point {
     }
 
     bool operator==(const point_t& a, const point_t& b) {
-        return (is_double_eq(a.get_x(), b.get_x()) &&
-                is_double_eq(a.get_y(), b.get_y()) &&
-                is_double_eq(a.get_z(), b.get_z()));
+        return (is_double_eq(a.x_, b.x_) &&
+                is_double_eq(a.y_, b.y_) &&
+                is_double_eq(a.z_, b.z_));
     }
 
     bool operator!=(const point_t& a, const point_t& b) {
@@ -106,19 +97,19 @@ namespace point {
 
     bool operator<(const point_t& a, const point_t& b) {
 
-        if (is_double_lt(a.get_x(), b.get_x()))
+        if (is_double_lt(a.x_, b.x_))
             return true;
-        else if (is_double_gt(a.get_x(), b.get_x()))
+        else if (is_double_gt(a.x_, b.x_))
             return false;
 
-        if (is_double_lt(a.get_y(), b.get_y()))
+        if (is_double_lt(a.y_, b.y_))
             return true;
-        else if (is_double_gt(a.get_y(), b.get_y()))
+        else if (is_double_gt(a.y_, b.y_))
             return false;
 
-        if (is_double_lt(a.get_z(), b.get_z()))
+        if (is_double_lt(a.z_, b.z_))
             return true;
-        else if (is_double_gt(a.get_z(), b.get_z()))
+        else if (is_double_gt(a.z_, b.z_))
             return false;
 
         return false;
@@ -137,12 +128,12 @@ namespace point {
     }
 
     std::istream& operator>>(std::istream& is, point_t& p) {
-        is >> p.set_x() >> p.set_y() >> p.set_z();
+        is >> p.x_ >> p.y_ >> p.z_;
         return is;
     }
 
     std::ostream& operator<<(std::ostream& os, const point_t& p) {
-        os << print_lcyan("Point(" << p.get_x() << "," << p.get_y() << "," << p.get_z() << ")");
+        os << print_lcyan("Point(" << p.x_ << "," << p.y_ << "," << p.z_ << ")");
         return os;
     }
 }

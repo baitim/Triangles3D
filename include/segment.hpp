@@ -13,29 +13,22 @@ namespace segment {
         coefs_t(bool is_valid, double k) : is_valid_(is_valid), k_(k) {}
     };
 
-    class segment_t final {
+    struct segment_t final {
         point_t x_;
         point_t y_;
 
-    public:
         segment_t() : x_(), y_() {}
         segment_t(point_t x, point_t y) : x_(x), y_(y) {}
-
-        point_t& set_x() { return x_; }
-        point_t& set_y() { return y_; }
-
-        point_t get_x() const { return x_; }
-        point_t get_y() const { return y_; }
 
         bool is_valid() const {
             return (x_.is_valid() && y_.is_valid());
         }
 
         coefs_t get_lines_intersect_parallel(const line_t& line, const line_t& seg_line) const {
-            double line_xx = line.get_x().get_x();
-            double line_vx = line.get_v().get_x();
-            double seg_xx  = seg_line.get_x().get_x();
-            double seg_vx  = seg_line.get_v().get_x();
+            double line_xx = line.x_.x_;
+            double line_vx = line.v_.x_;
+            double seg_xx  = seg_line.x_.x_;
+            double seg_vx  = seg_line.v_.x_;
 
             double k[4] = {};
             k[0] = (seg_xx - line_xx) / line_vx;
@@ -63,9 +56,9 @@ namespace segment {
             if (is_lines_parallel(seg_line, line))
                 return coefs_t{false};
 
-            point_t V1xV2 = cross_product(line.get_v(), seg_line.get_v());
-            point_t dP    = x_ - line.get_x();
-            point_t dPxV2 = cross_product(dP, seg_line.get_v());
+            point_t V1xV2 = cross_product(line.v_, seg_line.v_);
+            point_t dP    = x_ - line.x_;
+            point_t dPxV2 = cross_product(dP, seg_line.v_);
 
             point_t V1xV2_norm = V1xV2.norm();
             point_t dPxV2_norm = dPxV2.norm();
@@ -78,7 +71,7 @@ namespace segment {
                 if (V1xV2_norm == -dPxV2_norm)
                     k *= -1;
 
-                if (!is_point_in(line.get_x() + line.get_v() * k))
+                if (!is_point_in(line.x_ + line.v_ * k))
                     return coefs_t{false};
 
                 return coefs_t(true, k);
@@ -91,8 +84,8 @@ namespace segment {
             if (!segment.is_valid() || !is_valid())
                 return false;
 
-            point_t segment_v(segment.get_y() - segment.get_x());
-            line_t  line(segment.get_x(), segment_v);
+            point_t segment_v(segment.y_ - segment.x_);
+            line_t  line(segment.x_, segment_v);
 
             coefs_t coefs = get_line_intersect(line);
             segment_t valid_diap(0, 1);
@@ -101,8 +94,8 @@ namespace segment {
                 !valid_diap.is_point_in(coefs.k_))
                 return false;
 
-            double line_x = coefs.k_ * line.get_v().get_x() + line.get_x().get_x();
-            if (is_double_in_range(line_x, x_.get_x(), y_.get_x()))
+            double line_x = coefs.k_ * line.v_.x_ + line.x_.x_;
+            if (is_double_in_range(line_x, x_.x_, y_.x_))
                 return true;
 
             return false;
@@ -135,17 +128,17 @@ namespace segment {
     }
 
     bool operator==(const segment_t& a, const segment_t& b) {
-        return (a.get_x() == b.get_x() &&
-                a.get_y() == b.get_y());
+        return (a.x_ == b.x_ &&
+                a.y_ == b.y_);
     }
 
     std::istream& operator>>(std::istream& is, segment_t& s) {
-        is >> s.set_x() >> s.set_y();
+        is >> s.x_ >> s.y_;
         return is;
     }
 
     std::ostream& operator<<(std::ostream& os, const segment_t& s) {
-        os << print_lmagenta("Segment(") << s.get_x() << print_lmagenta(",") << s.get_y() <<
+        os << print_lmagenta("Segment(") << s.x_ << print_lmagenta(",") << s.y_ <<
               print_lmagenta(")");
         return os;
     }

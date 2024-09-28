@@ -5,23 +5,16 @@
 namespace line {
     using namespace point;
 
-    class line_t final {
+    struct line_t final {
         point_t x_;
         point_t v_;
 
-    public:
         line_t() : x_(), v_() {}
         line_t(point_t x, point_t v) : x_(x), v_(v) {}
 
-        point_t& set_x() { return x_; }
-        point_t& set_v() { return v_; }
-
-        point_t get_x() const { return x_; }
-        point_t get_v() const { return v_; }
-
         line_t norm() const {
             line_t norm{*this};
-            norm.set_v().norm();
+            norm.v_.norm();
             return norm;
         }
 
@@ -31,41 +24,41 @@ namespace line {
     };
 
     bool is_lines_parallel(const line_t& a, const line_t& b) {
-        point_t av_norm = a.get_v().norm();
-        point_t bv_norm = b.get_v().norm();
+        point_t av_norm = a.v_.norm();
+        point_t bv_norm = b.v_.norm();
 
         return (av_norm ==  bv_norm ||
                 av_norm == -bv_norm);
     }
 
     bool operator==(const line_t& a, const line_t& b) {
-        if ((b.get_x() == a.get_x()) && (b.get_v() == a.get_v()))
+        if ((b.x_ == a.x_) && (b.v_ == a.v_))
             return true;
 
-        line_t dx(a.get_x(), b.get_x() - a.get_x());
+        line_t dx(a.x_, b.x_ - a.x_);
         return (is_lines_parallel(a, b) &&
                 (is_lines_parallel(a, dx) ||
-                 (b.get_x() == a.get_x())));
+                 (b.x_ == a.x_)));
     }
 
     bool is_lines_intersect(const line_t& a, const line_t& b) {
         if (a == b)
             return true;
 
-        point_t M1M2 = b.get_x() - a.get_x();
-        if (is_double_eq(triple_product(M1M2, a.get_v(), b.get_v()), 0))
+        point_t M1M2 = b.x_ - a.x_;
+        if (is_double_eq(triple_product(M1M2, a.v_, b.v_), 0))
             return true;
 
         return false;
     }
 
     std::istream& operator>>(std::istream& is, line_t& l) {
-        is >> l.set_x() >> l.set_v();
+        is >> l.x_ >> l.v_;
         return is;
     }
 
     std::ostream& operator<<(std::ostream& os, const line_t& l) {
-        os << print_lblue("Line(") << l.get_x() << print_lblue(",") << l.get_v() << print_lblue(")");
+        os << print_lblue("Line(") << l.x_ << print_lblue(",") << l.v_ << print_lblue(")");
         return os;
     }
 }
