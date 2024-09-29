@@ -59,12 +59,12 @@ namespace octree {
                    coords_(coords) {}
 
             bool is_triangle_in(const triangle_t<T>& t) const {
-                if (is_double_lt(t.get_min_x(), coords_.c_[0]) ||
-                    is_double_gt(t.get_max_x(), coords_.c_[1]) ||
-                    is_double_lt(t.get_min_y(), coords_.c_[2]) ||
-                    is_double_gt(t.get_max_y(), coords_.c_[3]) ||
-                    is_double_lt(t.get_min_z(), coords_.c_[4]) ||
-                    is_double_gt(t.get_max_z(), coords_.c_[5]))
+                if (is_reals_lt(t.get_min_x(), coords_.c_[0]) ||
+                    is_reals_gt(t.get_max_x(), coords_.c_[1]) ||
+                    is_reals_lt(t.get_min_y(), coords_.c_[2]) ||
+                    is_reals_gt(t.get_max_y(), coords_.c_[3]) ||
+                    is_reals_lt(t.get_min_z(), coords_.c_[4]) ||
+                    is_reals_gt(t.get_max_z(), coords_.c_[5]))
                     return false;
 
                 return true;
@@ -79,22 +79,22 @@ namespace octree {
             for (auto it : triangles_) {
                 const triangle_t<T>& triangle = *it.first;
 
-                if (std::isnan(coords.c_[0]) || is_double_le(triangle.get_min_x(), coords.c_[0]))
+                if (std::isnan(coords.c_[0]) || is_reals_le(triangle.get_min_x(), coords.c_[0]))
                     coords.c_[0] = triangle.get_min_x();
 
-                if (std::isnan(coords.c_[1]) || is_double_ge(triangle.get_max_x(), coords.c_[1]))
+                if (std::isnan(coords.c_[1]) || is_reals_ge(triangle.get_max_x(), coords.c_[1]))
                     coords.c_[1] = triangle.get_max_x();
 
-                if (std::isnan(coords.c_[2]) || is_double_le(triangle.get_min_y(), coords.c_[2]))
+                if (std::isnan(coords.c_[2]) || is_reals_le(triangle.get_min_y(), coords.c_[2]))
                     coords.c_[2] = triangle.get_min_y();
 
-                if (std::isnan(coords.c_[3]) || is_double_ge(triangle.get_max_y(), coords.c_[3]))
+                if (std::isnan(coords.c_[3]) || is_reals_ge(triangle.get_max_y(), coords.c_[3]))
                     coords.c_[3] = triangle.get_max_y();
 
-                if (std::isnan(coords.c_[4]) || is_double_le(triangle.get_min_z(), coords.c_[4]))
+                if (std::isnan(coords.c_[4]) || is_reals_le(triangle.get_min_z(), coords.c_[4]))
                     coords.c_[4] = triangle.get_min_z();
 
-                if (std::isnan(coords.c_[5]) || is_double_ge(triangle.get_max_z(), coords.c_[5]))
+                if (std::isnan(coords.c_[5]) || is_reals_ge(triangle.get_max_z(), coords.c_[5]))
                     coords.c_[5] = triangle.get_max_z();
             }
 

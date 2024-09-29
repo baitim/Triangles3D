@@ -46,18 +46,18 @@ namespace triangle {
             T S  = triangle_square(a_, b_, c_);
 
             T S1 = triangle_square(p,  a_, b_);
-            if (is_double_gt(S1, S))
+            if (is_reals_gt(S1, S))
                 return false;
 
             T S2 = triangle_square(p,  a_, c_);
-            if (is_double_gt(S2, S))
+            if (is_reals_gt(S2, S))
                 return false;
 
             T S3 = triangle_square(p,  b_, c_);
-            if (is_double_gt(S3, S))
+            if (is_reals_gt(S3, S))
                 return false;
             
-            if (is_double_eq(S1 + S2 + S3, S))
+            if (is_reals_eq(S1 + S2 + S3, S))
                 return true;
 
             return false;
@@ -257,14 +257,14 @@ namespace triangle {
         T pl_norm_dot_b = pl.check_point_dot_plane(t.b_);
         T pl_norm_dot_c = pl.check_point_dot_plane(t.c_);
 
-        if (is_double_gt(pl_norm_dot_a, 0) &&
-            is_double_gt(pl_norm_dot_b, 0) &&
-            is_double_gt(pl_norm_dot_c, 0))
+        if (is_reals_gt(pl_norm_dot_a, T{0}) &&
+            is_reals_gt(pl_norm_dot_b, T{0}) &&
+            is_reals_gt(pl_norm_dot_c, T{0}))
             return true;
 
-        if (is_double_lt(pl_norm_dot_a, 0) &&
-            is_double_lt(pl_norm_dot_b, 0) &&
-            is_double_lt(pl_norm_dot_c, 0))
+        if (is_reals_lt(pl_norm_dot_a, T{0}) &&
+            is_reals_lt(pl_norm_dot_b, T{0}) &&
+            is_reals_lt(pl_norm_dot_c, T{0}))
             return true;
 
         return false;

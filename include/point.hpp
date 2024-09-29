@@ -2,10 +2,10 @@
 
 #include <iostream>
 #include "ANSI_colors.hpp"
-#include "doubles.hpp"
+#include "reals_numbers.hpp"
 
 namespace point {
-    using namespace doubles;
+    using namespace reals_numbers;
 
     template <typename T = double>
     struct point_t final {
@@ -98,9 +98,9 @@ namespace point {
 
     template <typename T>
     bool operator==(const point_t<T>& a, const point_t<T>& b) {
-        return (is_double_eq(a.x_, b.x_) &&
-                is_double_eq(a.y_, b.y_) &&
-                is_double_eq(a.z_, b.z_));
+        return (is_reals_eq(a.x_, b.x_) &&
+                is_reals_eq(a.y_, b.y_) &&
+                is_reals_eq(a.z_, b.z_));
     }
 
     template <typename T>
@@ -111,19 +111,19 @@ namespace point {
     template <typename T>
     bool operator<(const point_t<T>& a, const point_t<T>& b) {
 
-        if (is_double_lt(a.x_, b.x_))
+        if (is_reals_lt(a.x_, b.x_))
             return true;
-        else if (is_double_gt(a.x_, b.x_))
+        else if (is_reals_gt(a.x_, b.x_))
             return false;
 
-        if (is_double_lt(a.y_, b.y_))
+        if (is_reals_lt(a.y_, b.y_))
             return true;
-        else if (is_double_gt(a.y_, b.y_))
+        else if (is_reals_gt(a.y_, b.y_))
             return false;
 
-        if (is_double_lt(a.z_, b.z_))
+        if (is_reals_lt(a.z_, b.z_))
             return true;
-        else if (is_double_gt(a.z_, b.z_))
+        else if (is_reals_gt(a.z_, b.z_))
             return false;
 
         return false;

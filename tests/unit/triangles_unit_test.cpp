@@ -84,8 +84,8 @@ TEST(Point_main, test_point_length)
     point::point_t<long double> p2(5, 5, 0);
     point::point_t<long double> p3(3, 4, 4);
 
-    ASSERT_NEAR(p1.length(), p2.length(), doubles::EPSILON);
-    ASSERT_EQ(doubles::is_double_eq(p1.length(), p3.length()), false);
+    ASSERT_NEAR(p1.length(), p2.length(), reals_numbers::EPSILON);
+    ASSERT_EQ(reals_numbers::is_reals_eq(p1.length(), p3.length()), false);
 }
 
 TEST(Line_main, test_line_opers)
@@ -432,15 +432,15 @@ TEST(Triangle_main, test_triangle_square)
     triangle::triangle_t<long double> t2(p1, p2, p4);
     triangle::triangle_t<long double> t3(p2, p3, p4);
 
-    ASSERT_NEAR(t1.square(), t2.square(), doubles::EPSILON);
-    ASSERT_NEAR(t1.square(), t3.square(), doubles::EPSILON);
+    ASSERT_NEAR(t1.square(), t2.square(), reals_numbers::EPSILON);
+    ASSERT_NEAR(t1.square(), t3.square(), reals_numbers::EPSILON);
 
     triangle::triangle_t<long double> t4(p1, p2, p5);
     triangle::triangle_t<long double> t5(p2, p3, p5);
 
-    ASSERT_NEAR(t4.square(), t5.square(), doubles::EPSILON);
-    ASSERT_EQ(doubles::is_double_eq(t1.square(), t4.square()), false);
-    ASSERT_EQ(doubles::is_double_eq(t2.square(), t5.square()), false);
+    ASSERT_NEAR(t4.square(), t5.square(), reals_numbers::EPSILON);
+    ASSERT_EQ(reals_numbers::is_reals_eq(t1.square(), t4.square()), false);
+    ASSERT_EQ(reals_numbers::is_reals_eq(t2.square(), t5.square()), false);
 }
 
 TEST(Triangle_main, test_point_in_triangle)
