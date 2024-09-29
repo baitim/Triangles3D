@@ -98,7 +98,7 @@ namespace segment {
                 return false;
 
             T line_x = coefs.k_ * line.v_.x_ + line.x_.x_;
-            if (is_reals_in_range(line_x, x_.x_, y_.x_))
+            if (is_real_in_range(line_x, x_.x_, y_.x_))
                 return true;
 
             return false;
@@ -108,7 +108,7 @@ namespace segment {
             if (!p.is_valid())
                 return false;
 
-            if (is_reals_eq((y_ - x_).length(), (p - x_).length() + (p - y_).length()))
+            if (is_real_eq((y_ - x_).length(), (p - x_).length() + (p - y_).length()))
                 return true;
             
             return false;

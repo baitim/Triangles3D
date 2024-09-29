@@ -50,7 +50,7 @@ namespace line {
             return true;
 
         point_t<T> M1M2 = b.x_ - a.x_;
-        if (is_reals_eq(triple_product(M1M2, a.v_, b.v_), T{0}))
+        if (is_real_eq(triple_product(M1M2, a.v_, b.v_), T{0}))
             return true;
 
         return false;

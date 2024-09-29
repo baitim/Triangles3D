@@ -44,13 +44,13 @@ namespace plane {
             T zero_p{0};
 
             T factor = 1;
-            if (is_reals_ne(A_, zero_p)) {
+            if (is_real_ne(A_, zero_p)) {
                 factor /= A_;
-            } else if (is_reals_ne(B_, zero_p)) {
+            } else if (is_real_ne(B_, zero_p)) {
                 factor /= B_;
-            } else if (is_reals_ne(C_, zero_p)) {
+            } else if (is_real_ne(C_, zero_p)) {
                 factor /= C_;
-            } else if (is_reals_ne(D_, zero_p)) {
+            } else if (is_real_ne(D_, zero_p)) {
                 factor /= D_;
             }
 
@@ -99,7 +99,7 @@ namespace plane {
                            B_ * line.v_.y_ +
                            C_ * line.v_.z_);
 
-            if (is_reals_eq(coef, T{0}))
+            if (is_real_eq(coef, T{0}))
                 return line.x_;
 
             T t = - (D_ + 
@@ -131,20 +131,20 @@ namespace plane {
         T x = 0, y = 0, z = 0;
         T zero_p{0};
 
-        if (is_reals_ne(a.A_, zero_p)) x = - a.D_ / a.A_;
-        if (is_reals_ne(b.A_, zero_p)) x = - b.D_ / b.A_;
+        if (is_real_ne(a.A_, zero_p)) x = - a.D_ / a.A_;
+        if (is_real_ne(b.A_, zero_p)) x = - b.D_ / b.A_;
 
         T coef = a.B_ * b.C_ - a.C_ * b.B_;
-        if (is_reals_ne(coef, zero_p)) {
+        if (is_real_ne(coef, zero_p)) {
             y = (a.C_ * (b.D_ + b.A_ * x)) -
                 (b.C_ * (a.D_ + a.A_ * x));
 
             y /= coef;
         }
 
-        if (is_reals_ne(a.C_, zero_p))
+        if (is_real_ne(a.C_, zero_p))
             z = -(a.D_ + a.A_ * x + a.B_ * y) / a.C_;
-        else if (is_reals_ne(b.C_, zero_p))
+        else if (is_real_ne(b.C_, zero_p))
             z = -(b.D_ + b.A_ * x + b.B_ * y) / b.C_;
 
         point_t<T> line_point(x, y, z);
@@ -157,7 +157,7 @@ namespace plane {
         plane_t<T> b_norm = b.norm();
 
         return (is_planes_parallel(a, b) &&
-                is_reals_eq(a_norm.D_, b_norm.D_));
+                is_real_eq(a_norm.D_, b_norm.D_));
     }
 
     template <typename T>
