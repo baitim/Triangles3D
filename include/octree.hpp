@@ -102,7 +102,7 @@ namespace octree {
 
         int build_tree(cube_t*& cube, const coords_t& coords, int count,
                        const std::list<std::pair<const triangle_t*, int>>& triangles,
-                       std::vector<bool>& in_childs_parent) {
+                       std::vector<bool>& in_childs_parent, int pp_childs) {
 
             cube = new cube_t{coords};
             int count_inside = 0;
@@ -117,7 +117,7 @@ namespace octree {
                 i++;
             }
 
-            if (count_inside == count)
+            if (count_inside == pp_childs)
                 return count_inside;
 
             if (count_inside == 0) {
@@ -129,7 +129,8 @@ namespace octree {
             std::vector<bool> in_childs(count_inside, false);
             for (int i = 0; i < 8; ++i) {
                 int count_inside_child = build_tree(cube->childs[i], new_coords.coords_[i],
-                                                    count_inside, cube->triangles_, in_childs);
+                                                    count_inside, cube->triangles_, in_childs,
+                                                    count);
                 if (count_inside_child > 0) {
                     cube->childs[i]->parent = cube;
                     cube->valid_childs[i] = 1;
@@ -186,7 +187,7 @@ namespace octree {
 
             coords_t coords = get_borders();
             std::vector<bool> in_childs(count, false);
-            build_tree(root_, coords, count_, triangles_, in_childs);
+            build_tree(root_, coords, count_, triangles_, in_childs, -1);
         }
 
         std::set<int> get_set_intersecting_triangles() const {

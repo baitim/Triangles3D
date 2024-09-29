@@ -1025,6 +1025,25 @@ TEST(Octree_main, test_octree_intersect5_points)
     ASSERT_EQ(ans.find(1) != ans.end(), true);
 }
 
+TEST(Octree_main, test_octree_intersect6_points)
+{
+    point::point_t p1(0, 0, 0);
+    triangle::triangle_t t1(p1, p1, p1);
+
+    point::point_t p2(1, 1, 1);
+    triangle::triangle_t t2(p2, p2, p2);
+
+    const int count = 3;
+    triangle::triangle_t triangles[count] = {t1, t1, t2};
+
+    octree::octree_t octree(count, triangles);
+    std::set<int> ans = octree.get_set_intersecting_triangles();
+    
+    ASSERT_EQ(ans.find(0) != ans.end(), true);
+    ASSERT_EQ(ans.find(1) != ans.end(), true);
+    ASSERT_EQ(ans.find(2) != ans.end(), false);
+}
+
 TEST(Octree_main, test_octree_intersect5_points_lines1)
 {
     point::point_t p1(0, 0, 0);
