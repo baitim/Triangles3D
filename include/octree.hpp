@@ -7,15 +7,16 @@
 namespace octree {
     using namespace triangle;
 
+    template <typename T = double>
     class octree_t final {
         int count_;
-        std::list<std::pair<const triangle_t*, int>> triangles_;
+        std::list<std::pair<const triangle_t<T>*, int>> triangles_;
 
         struct coords_t final {
-            double c_[6]; //x1_, x2_, y1_, y2_, z1_, z2_
+            T c_[6]; //x1_, x2_, y1_, y2_, z1_, z2_
 
             coords_t() {}
-            coords_t(double x1, double x2, double y1, double y2, double z1, double z2) {
+            coords_t(T x1, T x2, T y1, T y2, T z1, T z2) {
                 c_[0] = x1;
                 c_[1] = x2;
                 c_[2] = y1;
@@ -28,9 +29,9 @@ namespace octree {
         struct child_coords_t final {
             coords_t coords_[8];
             child_coords_t(const coords_t& coords) {
-                double x_av = (coords.c_[0] + coords.c_[1]) / 2;
-                double y_av = (coords.c_[2] + coords.c_[3]) / 2;
-                double z_av = (coords.c_[4] + coords.c_[5]) / 2;
+                T x_av = (coords.c_[0] + coords.c_[1]) / 2;
+                T y_av = (coords.c_[2] + coords.c_[3]) / 2;
+                T z_av = (coords.c_[4] + coords.c_[5]) / 2;
 
                 for (int i = 0; i < 8; ++i) {
                     coords_[i] = coords;
@@ -50,14 +51,14 @@ namespace octree {
             cube_t* childs[8]{nullptr};
             int valid_childs[8]{};
             coords_t coords_;
-            std::list<std::pair<const triangle_t*, int>> triangles_;
+            std::list<std::pair<const triangle_t<T>*, int>> triangles_;
 
-            cube_t(double x1, double x2, double y1, double y2, double z1, double z2) :
+            cube_t(T x1, T x2, T y1, T y2, T z1, T z2) :
                    coords_(x1, x2, y1, y2, z1, z2) {}
             cube_t(const coords_t& coords) :
                    coords_(coords) {}
 
-            bool is_triangle_in(const triangle_t& t) const {
+            bool is_triangle_in(const triangle_t<T>& t) const {
                 if (is_double_lt(t.get_min_x(), coords_.c_[0]) ||
                     is_double_gt(t.get_max_x(), coords_.c_[1]) ||
                     is_double_lt(t.get_min_y(), coords_.c_[2]) ||
@@ -76,7 +77,7 @@ namespace octree {
         coords_t get_borders() const {
             coords_t coords;
             for (auto it : triangles_) {
-                const triangle_t& triangle = *it.first;
+                const triangle_t<T>& triangle = *it.first;
 
                 if (std::isnan(coords.c_[0]) || is_double_le(triangle.get_min_x(), coords.c_[0]))
                     coords.c_[0] = triangle.get_min_x();
@@ -101,7 +102,7 @@ namespace octree {
         }
 
         int build_tree(cube_t*& cube, const coords_t& coords, int count,
-                       const std::list<std::pair<const triangle_t*, int>>& triangles,
+                       const std::list<std::pair<const triangle_t<T>*, int>>& triangles,
                        std::vector<bool>& in_childs_parent, int pp_childs) {
 
             cube = new cube_t{coords};
@@ -181,7 +182,7 @@ namespace octree {
 
     public:
         octree_t() : count_(0) {}
-        octree_t(int count, const triangle_t* triangles) : count_(count) {
+        octree_t(int count, const triangle_t<T>* triangles) : count_(count) {
             for (int i = 0; i < count; ++i)
                 triangles_.push_front(std::make_pair(&triangles[i], i));
 

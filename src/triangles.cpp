@@ -10,11 +10,11 @@ int main() {
     int count;
     std::cin >> count;
 
-    triangle::triangle_t* triangles = new triangle::triangle_t[count];
+    triangle::triangle_t<>* triangles = new triangle::triangle_t<>[count];
     for (int i = 0; i < count; ++i)
         std::cin >> triangles[i];
 
-    octree::octree_t octree(count, triangles);
+    octree::octree_t<> octree(count, triangles);
     std::set<int> ans = octree.get_set_intersecting_triangles();
     for (auto it : ans)
         std::cout << it << "\n";

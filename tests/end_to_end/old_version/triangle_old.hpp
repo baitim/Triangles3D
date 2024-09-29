@@ -6,7 +6,8 @@
 namespace triangle_old {
     using namespace triangle;
     
-    std::set<int> get_set_triangles_in_intersections_old(int count, const triangle_t* tr) {
+    template <typename T>
+    std::set<int> get_set_triangles_in_intersections_old(int count, const triangle_t<T>* tr) {
         std::set<int> ans;
         for (int i = 0; i < count; ++i) {
             for (int j = i + 1; j < count; ++j) {

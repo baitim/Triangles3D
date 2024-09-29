@@ -10,7 +10,7 @@ int main() {
     int count;
     std::cin >> count;
 
-    triangle_old::triangle_t* triangles = new triangle_old::triangle_t[count];
+    triangle_old::triangle_t<>* triangles = new triangle_old::triangle_t<>[count];
     for (int i = 0; i < count; ++i)
         std::cin >> triangles[i];
 
