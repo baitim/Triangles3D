@@ -1,35 +1,40 @@
 #include <gtest/gtest.h>
+#include <algorithm>
 #include <vector>
 #include <string>
+#include <filesystem>
 #include <fstream>
 #include "octree.hpp"
 
-std::string int2str(int x, int size) {
-    std::string x_str = std::to_string(x);
-    int len = x_str.size();
-    while (len++ < size)
-        x_str = "0" + x_str;
-    return x_str;
+std::vector<std::string> get_sorted_files(std::filesystem::path path) {
+    std::vector<std::string> files;
+
+    for (const auto& entry : std::filesystem::directory_iterator(path))
+        files.push_back(entry.path().string());
+
+    std::sort(files.begin(), files.end());
+    return files;
 }
 
 TEST(Octree_end_to_end, end_to_end) 
 {
-    std::string path_to_test_dir = "../../../tests/end_to_end/";
-    std::string answers_old_str = path_to_test_dir + "answers_old/answer_";
-    std::string answers_new_str = path_to_test_dir + "answers_new/answer_";
-    std::string ans_str = ".ans";
+    const int count_tests  = 10;
 
-    const int count_tests = 10;
-    const int num_size    = 3;
+    std::filesystem::path dir = "../../../tests/end_to_end/";
+    std::filesystem::path answers_new_path = dir / "answers_new/";
+    std::filesystem::path answers_old_path = dir / "answers_old/";
+
+    std::vector<std::string> answers_new_str = get_sorted_files(answers_new_path);
+    std::vector<std::string> answers_old_str = get_sorted_files(answers_old_path);
 
     for (int i = 0, index; i < count_tests; ++i) {
-        std::ifstream answer_new_file(answers_new_str + int2str(i, num_size) + ans_str);
+        std::ifstream answer_new_file(answers_new_str[i]);
         std::vector<int> ans_new;
         while (answer_new_file >> index)
             ans_new.push_back(index);
         answer_new_file.close();
 
-        std::ifstream answer_old_file(answers_old_str + int2str(i, num_size) + ans_str);
+        std::ifstream answer_old_file(answers_old_str[i]);
         std::vector<int> ans_old;
         while (answer_old_file >> index)
             ans_old.push_back(index);
