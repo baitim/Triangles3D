@@ -104,44 +104,26 @@ namespace point {
     }
 
     template <typename T>
-    bool operator!=(const point_t<T>& a, const point_t<T>& b) {
-        return !(a == b);
-    }
-
-    template <typename T>
-    bool operator<(const point_t<T>& a, const point_t<T>& b) {
+    auto operator<=>(const point_t<T>& a, const point_t<T>& b) {
+        if (a == b)
+            return 0;
 
         if (is_real_lt(a.x_, b.x_))
-            return true;
+            return -1;
         else if (is_real_gt(a.x_, b.x_))
-            return false;
+            return  1;
 
         if (is_real_lt(a.y_, b.y_))
-            return true;
+            return -1;
         else if (is_real_gt(a.y_, b.y_))
-            return false;
+            return  1;
 
         if (is_real_lt(a.z_, b.z_))
-            return true;
+            return -1;
         else if (is_real_gt(a.z_, b.z_))
-            return false;
+            return  1;
 
-        return false;
-    }
-
-    template <typename T>
-    bool operator<=(const point_t<T>& a, const point_t<T>& b) {
-        return ((a < b) || (a == b));
-    }
-
-    template <typename T>
-    bool operator>(const point_t<T>& a, const point_t<T>& b) {
-        return !(a <= b);
-    }
-
-    template <typename T>
-    bool operator>=(const point_t<T>& a, const point_t<T>& b) {
-        return !(a < b);
+        return 0;
     }
 
     template <typename T>
