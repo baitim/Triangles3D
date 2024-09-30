@@ -10,14 +10,14 @@ int main() {
     int count;
     std::cin >> count;
 
-    triangle_old::triangle_t<>* triangles = new triangle_old::triangle_t<>[count];
+    std::vector<triangle_old::triangle_t<>> triangles(count);
     for (int i = 0; i < count; ++i)
         std::cin >> triangles[i];
 
-    std::set<int> ans = triangle_old::get_set_triangles_in_intersections_old(count, triangles);
+    std::set<int> ans = triangle_old::get_set_triangles_in_intersections_old(count, triangles.begin(),
+                                                                                    triangles.end());
     for (auto it : ans)
         std::cout << it << "\n";
 
-    delete [] triangles;
     return 0;
 }

@@ -9,7 +9,7 @@ namespace octree {
 
     template <typename T = double>
     class octree_t final {
-        int count_;
+        int count_ = 0;
         std::list<std::pair<const triangle_t<T>*, int>> triangles_;
 
         struct coords_t final {
@@ -181,10 +181,11 @@ namespace octree {
         }
 
     public:
-        octree_t() : count_(0) {}
-        octree_t(int count, const triangle_t<T>* triangles) : count_(count) {
-            for (int i = 0; i < count; ++i)
-                triangles_.push_front(std::make_pair(&triangles[i], i));
+        template <typename It>
+        octree_t(int count, It tr_begin, It tr_end) : count_(count) {
+            int ind = 0;
+            for (It it = tr_begin; it != tr_end; ++it, ++ind)
+                triangles_.push_front(std::make_pair(&(*it), ind));
 
             coords_t coords = get_borders();
             std::vector<bool> in_childs(count, false);
