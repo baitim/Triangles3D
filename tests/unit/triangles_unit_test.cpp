@@ -18,14 +18,13 @@ std::vector<std::string> get_sorted_files(std::filesystem::path path) {
 
 TEST(Octree_end_to_end, end_to_end) 
 {
-    const int count_tests  = 10;
-
     std::filesystem::path dir = "../../../tests/end_to_end/";
     std::filesystem::path answers_new_path = dir / "answers_new/";
     std::filesystem::path answers_old_path = dir / "answers_old/";
 
     std::vector<std::string> answers_new_str = get_sorted_files(answers_new_path);
     std::vector<std::string> answers_old_str = get_sorted_files(answers_old_path);
+    const int count_tests  = answers_new_str.size();
 
     for (int i = 0, index; i < count_tests; ++i) {
         std::ifstream answer_new_file(answers_new_str[i]);
