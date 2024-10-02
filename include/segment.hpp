@@ -8,9 +8,8 @@ namespace segment {
     template <typename T = double>
     struct coefs_t final {
         bool is_valid_;
-        T k_;
-        coefs_t() : is_valid_(false), k_(NAN) {}
-        coefs_t(bool is_valid) : is_valid_(is_valid), k_(NAN) {}
+        T k_ = NAN;
+        coefs_t(bool is_valid = false) : is_valid_(is_valid) {}
         coefs_t(bool is_valid, T k) : is_valid_(is_valid), k_(k) {}
     };
 
