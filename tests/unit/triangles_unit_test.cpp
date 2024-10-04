@@ -18,9 +18,11 @@ std::vector<std::string> get_sorted_files(std::filesystem::path path) {
 
 TEST(Octree_end_to_end, end_to_end) 
 {
-    std::filesystem::path dir = "../../../tests/end_to_end/";
-    std::filesystem::path answers_new_path = dir / "answers_new/";
-    std::filesystem::path answers_old_path = dir / "answers_old/";
+    std::string file{__FILE__};
+
+    std::filesystem::path dir = file.substr(0, file.rfind("/"));
+    std::filesystem::path answers_new_path = dir / "../end_to_end/answers_new/";
+    std::filesystem::path answers_old_path = dir / "../end_to_end/answers_old/";
 
     std::vector<std::string> answers_new_str = get_sorted_files(answers_new_path);
     std::vector<std::string> answers_old_str = get_sorted_files(answers_old_path);
