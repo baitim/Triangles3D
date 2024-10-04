@@ -90,7 +90,7 @@ TEST(Point_main, test_point_length)
     point::point_t<long double> p2(5, 5, 0);
     point::point_t<long double> p3(3, 4, 4);
 
-    ASSERT_NEAR(p1.length(), p2.length(), real_numbers::EPSILON);
+    ASSERT_NEAR(p1.length(), p2.length(), std::numeric_limits<long double>::epsilon());
     ASSERT_EQ(real_numbers::is_real_eq(p1.length(), p3.length()), false);
 }
 
@@ -438,13 +438,13 @@ TEST(Triangle_main, test_triangle_square)
     triangle::triangle_t<long double> t2(p1, p2, p4);
     triangle::triangle_t<long double> t3(p2, p3, p4);
 
-    ASSERT_NEAR(t1.square(), t2.square(), real_numbers::EPSILON);
-    ASSERT_NEAR(t1.square(), t3.square(), real_numbers::EPSILON);
+    ASSERT_NEAR(t1.square(), t2.square(), std::numeric_limits<long double>::epsilon());
+    ASSERT_NEAR(t1.square(), t3.square(), std::numeric_limits<long double>::epsilon());
 
     triangle::triangle_t<long double> t4(p1, p2, p5);
     triangle::triangle_t<long double> t5(p2, p3, p5);
 
-    ASSERT_NEAR(t4.square(), t5.square(), real_numbers::EPSILON);
+    ASSERT_NEAR(t4.square(), t5.square(), std::numeric_limits<long double>::epsilon());
     ASSERT_EQ(real_numbers::is_real_eq(t1.square(), t4.square()), false);
     ASSERT_EQ(real_numbers::is_real_eq(t2.square(), t5.square()), false);
 }

@@ -2,37 +2,64 @@
 
 #include <cmath>
 
+namespace std {
+}
+
 namespace real_numbers {
-    const double EPSILON = 1e-8;
+    template<class T> class my_numeric_limits {
+    public:
+       static double epsilon();
+    };
+
+    template<> class my_numeric_limits<long double> {
+    public:
+       static double epsilon() { return 1e-8; };
+    };
+
+    template<> class my_numeric_limits<double> {
+    public:
+       static double epsilon() { return 1e-8; };
+    };
+
+    template<> class my_numeric_limits<float> {
+    public:
+       static double epsilon() { return 1e-5; };
+    };
 
     template <typename T = double>
     bool is_real_eq(T a, T b) noexcept {
-        return (std::fabs(a - b) < EPSILON);
+        T eps = my_numeric_limits<T>::epsilon();
+        return (std::fabs(a - b) < eps);
     }
 
     template <typename T = double>
     bool is_real_ne(T a, T b) noexcept {
-        return (std::fabs(a - b) > EPSILON);
+        T eps = my_numeric_limits<T>::epsilon();
+        return (std::fabs(a - b) > eps);
     }
 
     template <typename T = double>
     bool is_real_lt(T a, T b) noexcept {
-        return ((a - b) < -EPSILON);
+        T eps = my_numeric_limits<T>::epsilon();
+        return ((a - b) < -eps);
     }
 
     template <typename T = double>
     bool is_real_le(T a, T b) noexcept {
-        return ((a - b) < EPSILON);
+        T eps = my_numeric_limits<T>::epsilon();
+        return ((a - b) < eps);
     }
 
     template <typename T = double>
     bool is_real_gt(T a, T b) noexcept {
-        return ((a - b) > EPSILON);
+        T eps = my_numeric_limits<T>::epsilon();
+        return ((a - b) > eps);
     }
 
     template <typename T = double>
     bool is_real_ge(T a, T b) noexcept {
-        return ((a - b) > -EPSILON);
+        T eps = my_numeric_limits<T>::epsilon();
+        return ((a - b) > -eps);
     }
 
     template <typename T = double>
