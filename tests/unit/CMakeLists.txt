@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.11)
 project(unit)
 
-set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
+set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../include)
 
 include_directories(${gtest_SOURCE_DIR})
 
