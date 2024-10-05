@@ -16,6 +16,11 @@ namespace point {
         point_t(T x, T y, T z) : x_(x), y_(y), z_(z) {}
         point_t(const point_t<T>& p) : x_(p.x_), y_(p.y_), z_(p.z_) {}
 
+        template <typename U>
+        point_t(const point_t<U>& p) : x_(static_cast<T>(p.x_)),
+                                       y_(static_cast<T>(p.y_)), 
+                                       z_(static_cast<T>(p.z_)) {}
+
         T length() const {
             return sqrt(x_ * x_ + y_ * y_ + z_ * z_);
         }

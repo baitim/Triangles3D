@@ -11,7 +11,13 @@ namespace plane {
 
         plane_t() : A_(NAN), B_(NAN), C_(NAN), D_(NAN) {}
         plane_t(T A, T B, T C, T D) : A_(A), B_(B), C_(C), D_(D) {}
-        plane_t(const plane_t& plane) : A_(plane.A_), B_(plane.B_), C_(plane.C_), D_(plane.D_) {}
+        plane_t(const plane_t<T>& plane) : A_(plane.A_), B_(plane.B_), C_(plane.C_), D_(plane.D_) {}
+
+        template <typename U>
+        plane_t(const plane_t<U>& plane) : A_(static_cast<T>(plane.A_)),
+                                           B_(static_cast<T>(plane.B_)),
+                                           C_(static_cast<T>(plane.C_)),
+                                           D_(static_cast<T>(plane.D_)) {}
 
         plane_t(point_t<T> a, point_t<T> b, point_t<T> c) {
             if (!is_points_set_plane(a, b, c)) {

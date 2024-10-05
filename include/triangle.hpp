@@ -28,8 +28,11 @@ namespace triangle {
                                                                         triag_plane_(ab, bc, ca) {}
 
         triangle_t(point_t<T> a, point_t<T> b, point_t<T> c) : a_(a), b_(b), c_(c), triag_plane_(a, b, c) {}
-        triangle_t(const triangle_t& triangle) : a_(triangle.a_), b_(triangle.b_), c_(triangle.c_),
-                                                 triag_plane_(a_, b_, c_) {}
+        triangle_t(const triangle_t<T>& triangle) : a_(triangle.a_), b_(triangle.b_), c_(triangle.c_),
+                                                    triag_plane_(a_, b_, c_) {}
+        template <typename U>
+        triangle_t(const triangle_t<U>& triangle) : a_(triangle.a_), b_(triangle.b_), c_(triangle.c_),
+                                                    triag_plane_(a_, b_, c_) {}
 
         T get_min_x() const { return std::min(a_.x_, std::min(b_.x_, c_.x_)); }
         T get_max_x() const { return std::max(a_.x_, std::max(b_.x_, c_.x_)); }
