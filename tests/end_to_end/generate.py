@@ -7,21 +7,25 @@ for test_num in range(0, count_tests) :
 
     count_triangles = random.randint(100, 120)
 
-    min_x = -200
-    max_x =  200
-    min_y = -200
-    max_y =  200
-    min_z = -200
-    max_z =  200
+    min_x = 0
+    max_x = 2
+    min_y = 0
+    max_y = 2
+    min_z = 0
+    max_z = 2
 
     cub_sqrt_count_triangles = (int)(count_triangles ** (1/3))
     stepx  = cub_sqrt_count_triangles
     stepy  = cub_sqrt_count_triangles
     stepz  = cub_sqrt_count_triangles
     
-    shiftx = max(abs(min_x), abs(max_x)) - 1
-    shifty = max(abs(min_y), abs(max_y)) - 1
-    shiftz = max(abs(min_z), abs(max_z)) - 1
+    shiftx = (max_x - min_x) / (stepx + 1) / 2
+    shifty = (max_y - min_y) / (stepy + 1) / 2
+    shiftz = (max_z - min_z) / (stepz + 1) / 2
+
+    x_0 = (max_x + min_x) / 2
+    y_0 = (max_y + min_y) / 2
+    z_0 = (max_z + min_z) / 2
 
     test_str = str(count_triangles) + "\n\n"
     file.write(test_str)
@@ -32,11 +36,11 @@ for test_num in range(0, count_tests) :
         cur_shifty = random.randint(-stepy, stepy) * shifty
         cur_shiftz = random.randint(-stepz, stepz) * shiftz
         for k in range(3) :
-            point_x = round(random.uniform(min_x, max_x), 2) + cur_shiftx
-            point_y = round(random.uniform(min_y, max_y), 2) + cur_shifty
-            point_z = round(random.uniform(min_z, max_z), 2) + cur_shiftz
+            point_x = random.uniform(-shiftx, shiftx) + cur_shiftx + x_0
+            point_y = random.uniform(-shifty, shifty) + cur_shifty + y_0
+            point_z = random.uniform(-shiftz, shiftz) + cur_shiftz + z_0
 
-            test_str += f'{point_x:<12}' + " " + f'{point_y:<12}' + " " + f'{point_z:<12}' + "\n"
+            test_str += f'{point_x:<20}' + " " + f'{point_y:<20}' + " " + f'{point_z:<20}' + "\n"
 
         test_str += "\n"
         file.write(test_str)
