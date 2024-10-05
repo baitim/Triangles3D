@@ -8,12 +8,12 @@ namespace std {
 namespace real_numbers {
     template<class T> class my_numeric_limits {
     public:
-       static double epsilon();
+       static T epsilon();
     };
 
     template<> class my_numeric_limits<long double> {
     public:
-       static double epsilon() { return 1e-8; };
+       static long double epsilon() { return 1e-10; };
     };
 
     template<> class my_numeric_limits<double> {
@@ -23,7 +23,7 @@ namespace real_numbers {
 
     template<> class my_numeric_limits<float> {
     public:
-       static double epsilon() { return 1e-5; };
+       static float epsilon() { return 1e-5; };
     };
 
     template <typename T = double>
