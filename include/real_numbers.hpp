@@ -2,9 +2,6 @@
 
 #include <cmath>
 
-namespace std {
-}
-
 namespace real_numbers {
     template<class T> class my_numeric_limits {
     public:
