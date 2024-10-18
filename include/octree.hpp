@@ -202,10 +202,4 @@ namespace octree {
             recursive_delete_tree(root_);
         }
     };
-
-    template <typename It>
-    std::set<int> get_set_intersecting_triangles(int count, It tr_begin, It tr_end) {
-        octree::octree_t<> octree(count, tr_begin, tr_end);
-        return octree.get_set_intersecting_triangles();
-    }
 }
