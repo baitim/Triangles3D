@@ -1,8 +1,9 @@
 #pragma once
 
+#include "triangle.hpp"
+#include <set>
 #include <list>
 #include <vector>
-#include "triangle.hpp"
 
 namespace octree {
     using namespace triangle;

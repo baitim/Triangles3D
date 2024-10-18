@@ -1,8 +1,8 @@
 #pragma once
 
-#include <iostream>
 #include "ANSI_colors.hpp"
 #include "real_numbers.hpp"
+#include <iostream>
 
 namespace point {
     using namespace real_numbers;

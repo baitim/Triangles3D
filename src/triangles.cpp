@@ -1,7 +1,6 @@
-#include <iostream>
-#include <set>
-#include <vector>
 #include "octree.hpp"
+#include <iostream>
+#include <vector>
 
 int main() {
 

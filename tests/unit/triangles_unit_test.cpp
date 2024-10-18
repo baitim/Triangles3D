@@ -1,10 +1,10 @@
+#include "octree.hpp"
 #include <gtest/gtest.h>
 #include <algorithm>
 #include <vector>
 #include <string>
 #include <filesystem>
 #include <fstream>
-#include "octree.hpp"
 
 std::vector<std::string> get_sorted_files(std::filesystem::path path) {
     std::vector<std::string> files;

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include "plane.hpp"
+#include <vector>
 
 namespace triangle {
     using namespace plane;
