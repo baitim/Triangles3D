@@ -15,8 +15,7 @@ int main() {
     for (int i = 0; i < count; ++i)
         std::cin >> triangles[i];
 
-    octree::octree_t<> octree(count, triangles.begin(), triangles.end());
-    std::set<int> ans = octree.get_set_intersecting_triangles();
+    std::set<int> ans = octree::get_set_intersecting_triangles(count, triangles.begin(), triangles.end());
     for (auto it : ans)
         std::cout << it << "\n";
 
