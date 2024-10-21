@@ -41,6 +41,10 @@ namespace triangle {
         T get_min_z() const { return std::min(a_.z_, std::min(b_.z_, c_.z_)); }
         T get_max_z() const { return std::max(a_.z_, std::max(b_.z_, c_.z_)); }
 
+        plane_t<T> norm() const {
+            return triag_plane_.norm();
+        }
+
         T square() const { 
             return triangle_square(a_, b_, c_); 
         }
