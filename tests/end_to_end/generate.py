@@ -5,14 +5,14 @@ for test_num in range(0, count_tests) :
     file_name = "tests_in/test_" + f'{test_num+1:03}' + ".in"
     file = open(file_name, 'w')
 
-    count_triangles = random.randint(100, 120)
+    count_triangles = random.randint(300, 300)
 
-    min_x = 0
-    max_x = 2
-    min_y = 0
-    max_y = 2
-    min_z = 0
-    max_z = 2
+    min_x = -2
+    max_x =  2
+    min_y = -2
+    max_y =  2
+    min_z = -2
+    max_z =  2
 
     cub_sqrt_count_triangles = (int)(count_triangles ** (1/3))
     stepx  = cub_sqrt_count_triangles
