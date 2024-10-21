@@ -87,6 +87,17 @@ namespace point {
     }
 
     template <typename T>
+    point_t<T> operator*(const T& a, const point_t<T>& b) {
+        return point_t<T>(a * b.x_, a * b.y_, a * b.z_);
+    }
+
+    template <typename T>
+    point_t<T> operator*(const point_t<T>& a, const T& b) {
+        return point_t<T>(a.x_ * b, a.y_ * b, a.z_ * b);
+    }
+
+
+    template <typename T>
     point_t<T> operator/(const point_t<T>& a, const point_t<T>& b) {
         return point_t<T>(a.x_ / b.x_, a.y_ / b.y_, a.z_ / b.z_);
     }
