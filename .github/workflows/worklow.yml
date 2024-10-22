@@ -1,4 +1,4 @@
-name: avl_tree pre-commit and post-push
+name: triangles3d pre-commit and post-push
 on:
   push:
     branches:
