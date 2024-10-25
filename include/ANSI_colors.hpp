@@ -18,19 +18,19 @@
 #define ANSI_LIGHT_CYAN     "\033[96m"
 #define ANSI_LIGHT_WHITE    "\033[97m"
 
-#define print_black(s)      ANSI_BLACK          s ANSI_DEFAULT_COLOR
-#define print_red(s)        ANSI_RED            s ANSI_DEFAULT_COLOR
-#define print_green(s)      ANSI_GREEN          s ANSI_DEFAULT_COLOR
-#define print_yellow(s)     ANSI_YELLOW         s ANSI_DEFAULT_COLOR
-#define print_blue(s)       ANSI_BLUE           s ANSI_DEFAULT_COLOR
-#define print_magenta(s)    ANSI_MAGENTA        s ANSI_DEFAULT_COLOR
-#define print_cyan(s)       ANSI_CYAN           s ANSI_DEFAULT_COLOR
-#define print_white(s)      ANSI_WHITE          s ANSI_DEFAULT_COLOR
-#define print_lblack(s)     ANSI_LIGHT_BLACK    s ANSI_DEFAULT_COLOR
-#define print_lred(s)       ANSI_LIGHT_RED      s ANSI_DEFAULT_COLOR
-#define print_lgreen(s)     ANSI_LIGHT_GREEN    s ANSI_DEFAULT_COLOR
-#define print_lyellow(s)    ANSI_LIGHT_YELLOW   s ANSI_DEFAULT_COLOR
-#define print_lblue(s)      ANSI_LIGHT_BLUE     s ANSI_DEFAULT_COLOR
-#define print_lmagenta(s)   ANSI_LIGHT_MAGENTA  s ANSI_DEFAULT_COLOR
-#define print_lcyan(s)      ANSI_LIGHT_CYAN     s ANSI_DEFAULT_COLOR
-#define print_lwhite(s)     ANSI_LIGHT_WHITE    s ANSI_DEFAULT_COLOR
+#define print_black(s)      ANSI_BLACK          << s << ANSI_DEFAULT_COLOR
+#define print_red(s)        ANSI_RED            << s << ANSI_DEFAULT_COLOR
+#define print_green(s)      ANSI_GREEN          << s << ANSI_DEFAULT_COLOR
+#define print_yellow(s)     ANSI_YELLOW         << s << ANSI_DEFAULT_COLOR
+#define print_blue(s)       ANSI_BLUE           << s << ANSI_DEFAULT_COLOR
+#define print_magenta(s)    ANSI_MAGENTA        << s << ANSI_DEFAULT_COLOR
+#define print_cyan(s)       ANSI_CYAN           << s << ANSI_DEFAULT_COLOR
+#define print_white(s)      ANSI_WHITE          << s << ANSI_DEFAULT_COLOR
+#define print_lblack(s)     ANSI_LIGHT_BLACK    << s << ANSI_DEFAULT_COLOR
+#define print_lred(s)       ANSI_LIGHT_RED      << s << ANSI_DEFAULT_COLOR
+#define print_lgreen(s)     ANSI_LIGHT_GREEN    << s << ANSI_DEFAULT_COLOR
+#define print_lyellow(s)    ANSI_LIGHT_YELLOW   << s << ANSI_DEFAULT_COLOR
+#define print_lblue(s)      ANSI_LIGHT_BLUE     << s << ANSI_DEFAULT_COLOR
+#define print_lmagenta(s)   ANSI_LIGHT_MAGENTA  << s << ANSI_DEFAULT_COLOR
+#define print_lcyan(s)      ANSI_LIGHT_CYAN     << s << ANSI_DEFAULT_COLOR
+#define print_lwhite(s)     ANSI_LIGHT_WHITE    << s << ANSI_DEFAULT_COLOR
