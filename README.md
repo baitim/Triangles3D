@@ -4,36 +4,38 @@
 
  Implementation of the intersection of triangles in 3D.
 
+## How to integrate
+ 
+ use [storage](https://github.com/baitim/ConanPackages), project = "triangles3d", version = "1.0", user = "baitim"
+
 ## How to run
 
 1. Clone <br>
-    write <code>git clone https://github.com/baitim/Triangles3D.git</code> in terminal
+    <code>git clone https://github.com/baitim/Triangles3D.git</code>
 
 2. Go to folder <br>
-    write <code>cd Triangles3D</code> in terminal
+    <code>cd Triangles3D</code>
 
-3. Init submodules <br>
-    write <code>git submodule update --init --recursive</code> in terminal
+3. Prepare conan <br>
+    <code>uv sync --group dev; source .venv/bin/activate</code><br>
+    <code>conan profile detect --force</code>
 
-4. Build <br>
-    write <code>cmake . -B build ; cmake --build build</code> in terminal
+4. Init dependencies <br>
+    <code>conan install . --build=missing -s compiler.cppstd=gnu20</code><br>
+    maybe you will need these flags for the conan <code>-s build_type=Debug</code>
 
-5. Run <br>
-    write <code>./build/src/triangles</code> in terminal <br>
+5. Build <br>
+    <code>cmake --preset release</code><br>
+    <code>cmake --build build/Release</code>
+
+6. Run <br>
+    <code>./build/Release/src/triangles</code>
 
 ## How to test
 
-1. Prepare
-    - Go to folder <br>
-        write <code>cd tests/end_to_end</code> in terminal
-
-    - Generate tests <br>
-        write <code>python3 generate.py</code> in terminal
-
-2. Testing
+* Testing
     - End to end & Unit<br>
-        in root dir write <code>ctest --test-dir build</code> in terminal <br>
-        maybe you will need these flags for the ctest <code>--rerun-failed --output-on-failure</code>
+        <code>ctest --test-dir build/Release --output-on-failure</code>
 
 ## Features
 * Optimized by octree

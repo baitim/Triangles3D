@@ -1,24 +1,13 @@
 cmake_minimum_required(VERSION 3.11)
-project(triangles)
+project(triangles3d)
 
-if(NOT CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 20)
-endif()
-
-if(NOT CMAKE_CXX_STANDARD_REQUIRED)
-    set(CMAKE_CXX_STANDARD_REQUIRED ON)
-endif()
-
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
-endif()
-
-if(NOT CMAKE_CXX_FLAGS_DEBUG)
-    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -O0 -fsanitize=address -fsanitize=undefined")
-endif()
-
-enable_testing()
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(./src)
-add_subdirectory(./tests)
-add_subdirectory(./googletest)
+
+option(ENABLE_TESTS "Enable testing" ON)
+if(ENABLE_TESTS)
+    enable_testing()
+    add_subdirectory(./tests)
+endif()

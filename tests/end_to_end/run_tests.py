@@ -1,8 +1,10 @@
 import os
 import glob
 import subprocess
+from pathlib import Path
 
-to_curr_dir = os.path.dirname(os.path.realpath(__file__))
+tests_dir = str(Path(__file__).parent)
+build_dir = str(Path.cwd())
 
 def run(answer_dir, exe_file):
     os.system("mkdir -p " + answer_dir)
@@ -14,13 +16,13 @@ def run(answer_dir, exe_file):
     ans_file.write(subprocess.check_output(command, shell=True).decode("utf-8"))
     ans_file.close()
 
-new_exe = "./triangles"
-old_exe = "./../tests/end_to_end/old_version/triangles_old"
-answer_new_dir = to_curr_dir + "/answers_new"
-answer_old_dir = to_curr_dir + "/answers_old"
+new_exe = build_dir + "/../../src/triangles"
+old_exe = build_dir + "/old_version/triangles_old"
+answer_new_dir = tests_dir + "/answers_new"
+answer_old_dir = tests_dir + "/answers_old"
 
 test_num = 0
-files = list(map(str, glob.glob(to_curr_dir + "/tests_in/test_*.in")))
+files = list(map(str, glob.glob(tests_dir + "/tests_in/test_*.in")))
 files.sort()
 
 for file in files :

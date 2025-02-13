@@ -1,13 +1,17 @@
 cmake_minimum_required(VERSION 3.11)
 project(unit)
 
-set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../include)
+set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 
-include_directories(${gtest_SOURCE_DIR})
+find_package(GTest REQUIRED)
 
 add_executable(unit_triangles triangles_unit_test.cpp)
-target_include_directories(unit_triangles PUBLIC ${INCLUDE_DIR})
-target_link_libraries(unit_triangles gtest gtest_main)
+target_sources(unit_triangles
+    PRIVATE
+    FILE_SET HEADERS
+    BASE_DIRS ${INCLUDE_DIR}
+)
+target_link_libraries(unit_triangles PRIVATE GTest::GTest)
 
 set(RUN_TESTS ./unit_triangles --gtest_color=yes)
 add_test(

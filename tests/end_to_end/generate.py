@@ -1,8 +1,11 @@
 import random
-count_tests = 10
+from pathlib import Path
 
+tests_dir = str(Path(__file__).parent)
+
+count_tests = 10
 for test_num in range(0, count_tests) :
-    file_name = "tests_in/test_" + f'{test_num+1:03}' + ".in"
+    file_name = tests_dir + "tests_in/test_" + f'{test_num+1:03}' + ".in"
     file = open(file_name, 'w')
 
     count_triangles = random.randint(300, 300)

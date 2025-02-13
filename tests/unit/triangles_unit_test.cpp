@@ -1104,3 +1104,8 @@ TEST(Octree_main, test_octree_intersect5_points_lines2)
     ASSERT_EQ(ans.find(2) != ans.end(), true);
     ASSERT_EQ(ans.find(3) != ans.end(), true);
 }
+
+int main(int argc, char **argv) {
+  testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}
