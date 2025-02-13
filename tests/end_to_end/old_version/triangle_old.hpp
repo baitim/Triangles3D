@@ -1,7 +1,7 @@
 #pragma once
 
 #include <set>
-#include "triangle.hpp"
+#include "Triangles3D/triangle.hpp"
 
 namespace triangle_old {
     using namespace triangle;

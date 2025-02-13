@@ -1,4 +1,4 @@
-#include "octree.hpp"
+#include "Triangles3D/octree.hpp"
 #include <gtest/gtest.h>
 #include <algorithm>
 #include <vector>
