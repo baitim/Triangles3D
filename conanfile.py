@@ -2,7 +2,7 @@ from conan import ConanFile
 from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout, CMakeDeps
 
 
-class matrixRecipe(ConanFile):
+class triangles3dRecipe(ConanFile):
     name = "triangles3d"
     version = "1.0"
     user = "baitim"
